@@ -46,11 +46,11 @@ const App = () => {
                 <Route path="/identities" element={<IdentityPage title="Sexual Orientation & Gender Identity" />} />
                 <Route path="/legal" element={<LegalPage title="Legal Landscape" />} />
                 <Route path="/challenges" element={<ChallengesPage title="Social Challenges" />} />
-                <Route path="/progress" element={<ProgressPage title="Progress & Developments" />} />
-                <Route path="/quiz/:sectionId" element={<QuizPage />} />
+                {/* <Route path="/progress" element={<ProgressPage title="Progress & Developments" />} /> */}
                 <Route path="/resources" element={<ResourcesPage />} />
                 <Route path="/social" element={<SocialPage />} />
                 <Route path="/glossary" element={<GlossaryPage />} />
+                <Route path="/quiz" element={<QuizPage />} />
                 <Route path="*" element={<ErrorPage />} />
               </Routes>
             </Layout >

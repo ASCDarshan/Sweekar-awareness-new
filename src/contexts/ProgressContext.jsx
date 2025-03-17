@@ -1,13 +1,6 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
-import localforage from "localforage";
+import { createContext, useContext, useState } from "react";
 
-export const useProgress = () => {
-  const context = useContext(ProgressContext);
-  if (!context) {
-    throw new Error("useProgress must be used within a ProgressProvider");
-  }
-  return context;
-};
+const ProgressContext = createContext();
 
 const sections = [
   {
@@ -63,47 +56,10 @@ const sections = [
   },
 ];
 
-const totalContentCount = sections.reduce(
-  (total, section) => total + section.subsections.length,
-  0
-);
-
-const ProgressContext = createContext();
-
 export const ProgressProvider = ({ children }) => {
+  const totalSteps = 8;
+  const [visitedPages, setVisitedPages] = useState(new Set());
   const [completedContent, setCompletedContent] = useState({});
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadProgress = async () => {
-      try {
-        const savedProgress = await localforage.getItem("tutorialProgress");
-        if (savedProgress) {
-          setCompletedContent(savedProgress);
-        }
-      } catch (error) {
-        console.error("Error loading progress:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadProgress();
-  }, []);
-
-  useEffect(() => {
-    const saveProgress = async () => {
-      if (!loading) {
-        try {
-          await localforage.setItem("tutorialProgress", completedContent);
-        } catch (error) {
-          console.error("Error saving progress:", error);
-        }
-      }
-    };
-
-    saveProgress();
-  }, [completedContent, loading]);
 
   const markAsCompleted = (sectionId, subsectionId) => {
     if (completedContent[`${sectionId}_${subsectionId}`]) {
@@ -131,35 +87,19 @@ export const ProgressProvider = ({ children }) => {
     return (completedSubsections / section.subsections.length) * 100;
   };
 
-  const getOverallProgress = () => {
-    const completedCount = Object.keys(completedContent).length;
-    return (completedCount / totalContentCount) * 100;
+  const markPageAsVisited = (page) => {
+    setVisitedPages((prev) => new Set([...prev, page]));
   };
 
-  const resetProgress = async () => {
-    setCompletedContent({});
-    try {
-      await localforage.removeItem("tutorialProgress");
-    } catch (error) {
-      console.error("Error resetting progress:", error);
-    }
+  const getOverallProgress = () => {
+    return (visitedPages.size / totalSteps) * 100;
   };
 
   return (
-    <ProgressContext.Provider
-      value={{
-        sections,
-        markAsCompleted,
-        isCompleted,
-        getSectionCompletion,
-        getOverallProgress,
-        resetProgress,
-        loading,
-      }}
-    >
+    <ProgressContext.Provider value={{ getOverallProgress, markPageAsVisited, markAsCompleted, getSectionCompletion, isCompleted }}>
       {children}
     </ProgressContext.Provider>
   );
 };
 
-export default ProgressContext;
+export const useProgress = () => useContext(ProgressContext);

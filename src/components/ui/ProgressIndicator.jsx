@@ -1,5 +1,7 @@
 import React from 'react';
 import { Box, LinearProgress, Typography, styled } from '@mui/material';
+import { useLocation } from "react-router-dom";
+
 
 const ProgressContainer = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(2),
@@ -23,13 +25,15 @@ const ProgressLabel = styled(Typography)(({ theme }) => ({
 }));
 
 const ProgressIndicator = ({ label, value, showPercentage = true }) => {
+  const location = useLocation();
+  const isQuizPage = location.pathname === "/quiz";
   return (
     <ProgressContainer>
       <ProgressLabel variant="body2" color="textSecondary">
         <span>{label}</span>
-        {showPercentage && <span>{Math.round(value)}%</span>}
+        {showPercentage && !isQuizPage && <span>{Math.round(value)}%</span>}
       </ProgressLabel>
-      <StyledLinearProgress variant="determinate" value={value} />
+      {!isQuizPage && <StyledLinearProgress variant="determinate" value={value} />}
     </ProgressContainer>
   );
 };

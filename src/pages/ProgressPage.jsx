@@ -1,3 +1,4 @@
+/* eslint-disable no-constant-binary-expression */
 import React from "react";
 import {
   Typography,
@@ -94,16 +95,16 @@ const ProgressPage = () => {
                         <Typography variant="h6">
                           {index + 1}. {section.title}
                         </Typography>
-                        <Box 
+                        <Box
                           sx={{
-                            px: 1.5, 
-                            py: 0.5, 
+                            px: 1.5,
+                            py: 0.5,
                             borderRadius: 10,
-                            bgcolor: getSectionCompletion(section.id) === 100 
-                              ? 'tertiary.light' 
+                            bgcolor: getSectionCompletion(section.id) === 100
+                              ? 'tertiary.light'
                               : 'background.default',
-                            color: getSectionCompletion(section.id) === 100 
-                              ? 'tertiary.dark' 
+                            color: getSectionCompletion(section.id) === 100
+                              ? 'tertiary.dark'
                               : 'text.secondary',
                             fontSize: '0.875rem',
                             fontWeight: 500,
@@ -123,10 +124,10 @@ const ProgressPage = () => {
           </Grid>
         </Box>
 
-        <Box 
-          sx={{ 
-            mt: 6, 
-            mb: 4, 
+        <Box
+          sx={{
+            mt: 6,
+            mb: 4,
             textAlign: "center",
             py: 4,
             px: 3,
@@ -145,23 +146,6 @@ const ProgressPage = () => {
         </Box>
       </Container>
     </motion.div>
-  );
-
-
-  return (
-    <SectionTemplate
-      sectionId="progress"
-      title="Progress & Developments in LGBTQAI+ Rights"
-      subtitle="Tracking positive changes and future directions"
-      introduction={progressData.introduction}
-      subsections={subsections}
-      activeSubsection={activeSubsection}
-      prevLink={{ path: "/challenges", label: "Social Challenges" }}
-      nextLink={{ path: "/resources", label: "Resources & Support" }}
-      renderCustomSubsections={renderCustomSubsections}
-    >
-      {renderContent()}
-    </SectionTemplate>
   );
 };
 

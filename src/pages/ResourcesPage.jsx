@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Typography,
@@ -9,7 +9,9 @@ import {
   Paper,
   TextField,
   InputAdornment,
-  useTheme,
+  Button,
+  Card,
+  CardContent,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { motion } from "framer-motion";
@@ -19,10 +21,14 @@ import LanguageIcon from "@mui/icons-material/Language";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import GavelIcon from "@mui/icons-material/Gavel";
 import SupportIcon from "@mui/icons-material/Support";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Link as RouterLink } from "react-router-dom";
 
 import SectionHeader from "../components/ui/SectionHeader";
 import ResourceCard from "../components/tutorial/ResourceCard";
 import { resourcesData } from "../data";
+import { useProgress } from "../contexts/ProgressContext";
 
 const TabPanel = styled(Box)(({ theme }) => ({
   padding: theme.spacing(3, 0),
@@ -44,6 +50,12 @@ const IntroBox = styled(Paper)(({ theme }) => ({
 const ResourcesPage = () => {
   const [tab, setTab] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const { markPageAsVisited } = useProgress();
+
+  useEffect(() => {
+    markPageAsVisited("/resources");
+  }, []);
 
   const {
     organizations,
@@ -91,6 +103,20 @@ const ResourcesPage = () => {
     }
   };
 
+  const NavigationButton = styled(Button)(({ theme }) => ({
+    marginTop: theme.spacing(3),
+    alignSelf: "flex-end",
+  }));
+
+  const CardFooter = styled(Box)(({ theme }) => ({
+    display: "flex",
+    justifyContent: "flex-end",
+    paddingTop: theme.spacing(2),
+    borderTop: `1px solid ${theme.palette.divider}`,
+    marginTop: theme.spacing(3),
+  }));
+
+
   const currentResources = getCurrentResources();
 
   return (
@@ -133,7 +159,7 @@ const ResourcesPage = () => {
         }}
       />
 
-      <Paper >
+      <Paper>
         <Tabs
           value={tab}
           onChange={handleTabChange}
@@ -189,23 +215,34 @@ const ResourcesPage = () => {
           contact details before reaching out to any organization.
         </Typography>
       </Box>
-    </motion.div>
-  );
 
-  return (
-    <SectionTemplate
-      sectionId="resources"
-      title="Resources & Support for LGBTQAI+ Community"
-      subtitle="Organizations, helplines, and support services"
-      introduction={resourcesData.introduction}
-      subsections={subsections}
-      activeSubsection={activeSubsection}
-      prevLink={{ path: "/progress", label: "Progress & Developments" }}
-      nextLink={{ path: "/social", label: "Social Impact" }}
-      renderCustomSubsections={renderCustomSubsections}
-    >
-      {renderContent()}
-    </SectionTemplate>
+      <Card sx={{ mb: 6 }}>
+        <CardContent>
+          <CardFooter sx={{ display: "flex", justifyContent: "space-between" }}>
+
+            <NavigationButton
+              variant="outlined"
+              color="primary"
+              component={RouterLink}
+              to="/challenges"
+              startIcon={<ArrowBackIcon />}
+            >
+              Previous
+            </NavigationButton>
+
+            <NavigationButton
+              variant="contained"
+              color="primary"
+              component={RouterLink}
+              to="/social"
+              endIcon={<ArrowForwardIcon />}
+            >
+              Next: Social
+            </NavigationButton>
+          </CardFooter>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 };
 

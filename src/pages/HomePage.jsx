@@ -77,7 +77,6 @@ const FeatureIcon = styled(Box)(({ theme }) => ({
 
 const HomePage = () => {
   const theme = useTheme();
-  const { sections, getSectionCompletion, getOverallProgress } = useProgress();
 
   return (
     <motion.div
@@ -129,54 +128,6 @@ const HomePage = () => {
           </Box>
         </Container>
       </HeroSection>
-
-      {/* <Box sx={{ mb: 6 }}>
-        <SectionHeader
-          title="Your Learning Progress"
-          subtitle="Track your educational journey through different aspects of LGBTQAI+ awareness."
-        />
-
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Overall Progress
-                </Typography>
-                <ProgressIndicator
-                  label="Tutorial Completion"
-                  value={getOverallProgress()}
-                />
-
-                <Box sx={{ mt: 4 }}>
-                  <Typography variant="h6" gutterBottom>
-                    Section Progress
-                  </Typography>
-                  <Grid container spacing={2}>
-                    {sections.map((section) => (
-                      <Grid item xs={12} sm={6} md={4} key={section.id}>
-                        <ProgressIndicator
-                          label={section.title}
-                          value={getSectionCompletion(section.id)}
-                        />
-                      </Grid>
-                    ))}
-                  </Grid>
-                </Box>
-              </CardContent>
-              <CardActions>
-                <Button
-                  component={RouterLink}
-                  to="/introduction"
-                  endIcon={<ArrowForwardIcon />}
-                >
-                  Continue Learning
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        </Grid>
-      </Box> */}
 
       <Box sx={{ mb: 6 }}>
         <SectionHeader
@@ -231,8 +182,6 @@ const HomePage = () => {
           </Grid>
         </Grid>
       </Box>
-
-     
 
       <Box
         sx={{

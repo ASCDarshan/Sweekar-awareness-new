@@ -7,6 +7,7 @@ import { styled } from '@mui/material/styles';
 import { motion, AnimatePresence } from 'framer-motion';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
+import { useProgress } from '../../contexts/ProgressContext';
 
 const QuizPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),

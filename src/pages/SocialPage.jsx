@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Box,
     Grid,
@@ -19,6 +19,7 @@ import {
     ListItemText,
     IconButton,
     Collapse,
+    Button,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { motion } from "framer-motion";
@@ -38,7 +39,10 @@ import ChurchIcon from "@mui/icons-material/Church";
 import SectionHeader from "../components/ui/SectionHeader";
 import { socialData } from "../data/socialData";
 import SectionTemplate from "../components/sections/SectionTemplate";
-
+import { useProgress } from "../contexts/ProgressContext";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Link as RouterLink } from "react-router-dom";
 
 const GradientCard = styled(Card)(({ theme }) => ({
     position: "relative",
@@ -106,11 +110,31 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
     },
 }));
 
+const NavigationButton = styled(Button)(({ theme }) => ({
+    marginTop: theme.spacing(3),
+    alignSelf: "flex-end",
+}));
+
+const CardFooter = styled(Box)(({ theme }) => ({
+    display: "flex",
+    justifyContent: "flex-end",
+    paddingTop: theme.spacing(2),
+    borderTop: `1px solid ${theme.palette.divider}`,
+    marginTop: theme.spacing(3),
+}));
+
+
 const SocialPage = () => {
     const theme = useTheme();
     const [tabValue, setTabValue] = useState(0);
     const [expandedItems, setExpandedItems] = useState({});
     const { challenges, progress } = socialData;
+
+    const { markPageAsVisited } = useProgress();
+
+    useEffect(() => {
+        markPageAsVisited("/social");
+    }, []);
 
     const handleTabChange = (event, newValue) => {
         setTabValue(newValue);
@@ -150,7 +174,6 @@ const SocialPage = () => {
                         <StyledTab label="Progress & Visibility" />
                     </StyledTabs>
 
-                    {/* Challenges Tab */}
                     {tabValue === 0 && (
                         <Box>
                             <motion.div
@@ -169,22 +192,29 @@ const SocialPage = () => {
                                     </CardContent>
                                 </GradientCard>
 
-                                {/* Stigma and Discrimination */}
                                 <ChallengeCard>
                                     <CardContent>
-                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <ReportProblemIcon sx={{ mr: 2, color: theme.palette.accent1.main }} />
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                                                <ReportProblemIcon
+                                                    sx={{ mr: 2, color: theme.palette.accent1.main }}
+                                                />
                                                 <Typography variant="h6">
                                                     {challenges.stigma_discrimination.title}
                                                 </Typography>
                                             </Box>
                                             <IconButton
-                                                onClick={() => handleToggleExpand('stigma', 'main')}
-                                                aria-expanded={isExpanded('stigma', 'main')}
+                                                onClick={() => handleToggleExpand("stigma", "main")}
+                                                aria-expanded={isExpanded("stigma", "main")}
                                                 aria-label="show more"
                                             >
-                                                {isExpanded('stigma', 'main') ? (
+                                                {isExpanded("stigma", "main") ? (
                                                     <KeyboardArrowUpIcon />
                                                 ) : (
                                                     <KeyboardArrowDownIcon />
@@ -196,65 +226,81 @@ const SocialPage = () => {
                                             {challenges.stigma_discrimination.description}
                                         </Typography>
 
-                                        <Collapse in={isExpanded('stigma', 'main')}>
+                                        <Collapse in={isExpanded("stigma", "main")}>
                                             <Grid container spacing={2} sx={{ mt: 2 }}>
-                                                {challenges.stigma_discrimination.examples.map((example, index) => (
-                                                    <Grid item xs={12} sm={6} key={index}>
-                                                        <motion.div
-                                                            initial={{ opacity: 0, y: 20 }}
-                                                            animate={{ opacity: 1, y: 0 }}
-                                                            transition={{ delay: index * 0.1, duration: 0.5 }}
-                                                        >
-                                                            <Paper
-                                                                elevation={2}
-                                                                sx={{
-                                                                    p: 2,
-                                                                    height: '100%',
-                                                                    bgcolor: theme.palette.background.card,
+                                                {challenges.stigma_discrimination.examples.map(
+                                                    (example, index) => (
+                                                        <Grid item xs={12} sm={6} key={index}>
+                                                            <motion.div
+                                                                initial={{ opacity: 0, y: 20 }}
+                                                                animate={{ opacity: 1, y: 0 }}
+                                                                transition={{
+                                                                    delay: index * 0.1,
+                                                                    duration: 0.5,
                                                                 }}
                                                             >
-                                                                <Typography variant="subtitle1" fontWeight="bold" color="primary">
-                                                                    {example.type}
-                                                                </Typography>
-                                                                <Typography variant="body2" paragraph>
-                                                                    {example.description}
-                                                                </Typography>
-                                                                <Typography
-                                                                    variant="body2"
+                                                                <Paper
+                                                                    elevation={2}
                                                                     sx={{
-                                                                        p: 1,
-                                                                        bgcolor: 'rgba(233, 30, 99, 0.08)',
-                                                                        borderRadius: 1,
-                                                                        fontStyle: 'italic',
+                                                                        p: 2,
+                                                                        height: "100%",
+                                                                        bgcolor: theme.palette.background.card,
                                                                     }}
                                                                 >
-                                                                    <strong>Impact:</strong> {example.impact}
-                                                                </Typography>
-                                                            </Paper>
-                                                        </motion.div>
-                                                    </Grid>
-                                                ))}
+                                                                    <Typography
+                                                                        variant="subtitle1"
+                                                                        fontWeight="bold"
+                                                                        color="primary"
+                                                                    >
+                                                                        {example.type}
+                                                                    </Typography>
+                                                                    <Typography variant="body2" paragraph>
+                                                                        {example.description}
+                                                                    </Typography>
+                                                                    <Typography
+                                                                        variant="body2"
+                                                                        sx={{
+                                                                            p: 1,
+                                                                            bgcolor: "rgba(233, 30, 99, 0.08)",
+                                                                            borderRadius: 1,
+                                                                            fontStyle: "italic",
+                                                                        }}
+                                                                    >
+                                                                        <strong>Impact:</strong> {example.impact}
+                                                                    </Typography>
+                                                                </Paper>
+                                                            </motion.div>
+                                                        </Grid>
+                                                    )
+                                                )}
                                             </Grid>
                                         </Collapse>
                                     </CardContent>
                                 </ChallengeCard>
 
-                                {/* Mental Health Disparities */}
                                 <ChallengeCard>
                                     <CardContent>
-                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <PsychologyIcon sx={{ mr: 2, color: theme.palette.accent1.main }} />
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                                                <PsychologyIcon
+                                                    sx={{ mr: 2, color: theme.palette.accent1.main }}
+                                                />
                                                 <Typography variant="h6">
                                                     {challenges.mental_health.title}
                                                 </Typography>
                                             </Box>
                                             <IconButton
-                                                onClick={() => handleToggleExpand('mental', 'main')}
-                                                aria-expanded={isExpanded('mental', 'main')}
+                                                onClick={() => handleToggleExpand("mental", "main")}
+                                                aria-expanded={isExpanded("mental", "main")}
                                                 aria-label="show more"
                                             >
-                                                {isExpanded('mental', 'main') ? (
+                                                {isExpanded("mental", "main") ? (
                                                     <KeyboardArrowUpIcon />
                                                 ) : (
                                                     <KeyboardArrowDownIcon />
@@ -266,7 +312,7 @@ const SocialPage = () => {
                                             {challenges.mental_health.description}
                                         </Typography>
 
-                                        <Collapse in={isExpanded('mental', 'main')}>
+                                        <Collapse in={isExpanded("mental", "main")}>
                                             <Box sx={{ mt: 3 }}>
                                                 {challenges.mental_health.issues.map((issue, index) => (
                                                     <motion.div
@@ -284,7 +330,11 @@ const SocialPage = () => {
                                                                 borderLeft: `4px solid ${theme.palette.accent2.main}`,
                                                             }}
                                                         >
-                                                            <Typography variant="h6" color="accent2.main" gutterBottom>
+                                                            <Typography
+                                                                variant="h6"
+                                                                color="accent2.main"
+                                                                gutterBottom
+                                                            >
                                                                 {issue.condition}
                                                             </Typography>
                                                             <Typography variant="body2" paragraph>
@@ -293,7 +343,13 @@ const SocialPage = () => {
                                                             <Typography variant="subtitle2" gutterBottom>
                                                                 Contributing Factors:
                                                             </Typography>
-                                                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                                                            <Box
+                                                                sx={{
+                                                                    display: "flex",
+                                                                    flexWrap: "wrap",
+                                                                    gap: 1,
+                                                                }}
+                                                            >
                                                                 {issue.factors.map((factor, idx) => (
                                                                     <Chip
                                                                         key={idx}
@@ -313,7 +369,7 @@ const SocialPage = () => {
                                                     sx={{
                                                         p: 3,
                                                         mt: 3,
-                                                        bgcolor: 'rgba(244, 67, 54, 0.05)',
+                                                        bgcolor: "rgba(244, 67, 54, 0.05)",
                                                         borderRadius: 2,
                                                     }}
                                                 >
@@ -321,14 +377,16 @@ const SocialPage = () => {
                                                         Barriers to Mental Health Care
                                                     </Typography>
                                                     <List>
-                                                        {challenges.mental_health.barriers_to_care.map((barrier, index) => (
-                                                            <ListItem key={index}>
-                                                                <ListItemIcon>
-                                                                    <WarningIcon color="error" />
-                                                                </ListItemIcon>
-                                                                <ListItemText primary={barrier} />
-                                                            </ListItem>
-                                                        ))}
+                                                        {challenges.mental_health.barriers_to_care.map(
+                                                            (barrier, index) => (
+                                                                <ListItem key={index}>
+                                                                    <ListItemIcon>
+                                                                        <WarningIcon color="error" />
+                                                                    </ListItemIcon>
+                                                                    <ListItemText primary={barrier} />
+                                                                </ListItem>
+                                                            )
+                                                        )}
                                                     </List>
                                                 </Paper>
                                             </Box>
@@ -338,19 +396,27 @@ const SocialPage = () => {
 
                                 <ChallengeCard>
                                     <CardContent>
-                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <ChurchIcon sx={{ mr: 2, color: theme.palette.accent1.main }} />
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                                                <ChurchIcon
+                                                    sx={{ mr: 2, color: theme.palette.accent1.main }}
+                                                />
                                                 <Typography variant="h6">
                                                     {challenges.religious_cultural.title}
                                                 </Typography>
                                             </Box>
                                             <IconButton
-                                                onClick={() => handleToggleExpand('religious', 'main')}
-                                                aria-expanded={isExpanded('religious', 'main')}
+                                                onClick={() => handleToggleExpand("religious", "main")}
+                                                aria-expanded={isExpanded("religious", "main")}
                                                 aria-label="show more"
                                             >
-                                                {isExpanded('religious', 'main') ? (
+                                                {isExpanded("religious", "main") ? (
                                                     <KeyboardArrowUpIcon />
                                                 ) : (
                                                     <KeyboardArrowDownIcon />
@@ -362,34 +428,39 @@ const SocialPage = () => {
                                             {challenges.religious_cultural.description}
                                         </Typography>
 
-                                        <Collapse in={isExpanded('religious', 'main')}>
+                                        <Collapse in={isExpanded("religious", "main")}>
                                             <Grid container spacing={2} sx={{ mt: 3 }}>
-                                                {challenges.religious_cultural.perspectives.map((perspective, index) => (
-                                                    <Grid item xs={12} md={4} key={index}>
-                                                        <motion.div
-                                                            initial={{ opacity: 0, scale: 0.9 }}
-                                                            animate={{ opacity: 1, scale: 1 }}
-                                                            transition={{ delay: index * 0.2, duration: 0.5 }}
-                                                        >
-                                                            <Paper
-                                                                elevation={2}
-                                                                sx={{
-                                                                    p: 3,
-                                                                    height: '100%',
-                                                                    bgcolor: theme.palette.background.card,
-                                                                    borderTop: `3px solid ${theme.palette.primary.main}`,
+                                                {challenges.religious_cultural.perspectives.map(
+                                                    (perspective, index) => (
+                                                        <Grid item xs={12} md={4} key={index}>
+                                                            <motion.div
+                                                                initial={{ opacity: 0, scale: 0.9 }}
+                                                                animate={{ opacity: 1, scale: 1 }}
+                                                                transition={{
+                                                                    delay: index * 0.2,
+                                                                    duration: 0.5,
                                                                 }}
                                                             >
-                                                                <Typography variant="h6" gutterBottom>
-                                                                    {perspective.view}
-                                                                </Typography>
-                                                                <Typography variant="body2">
-                                                                    {perspective.description}
-                                                                </Typography>
-                                                            </Paper>
-                                                        </motion.div>
-                                                    </Grid>
-                                                ))}
+                                                                <Paper
+                                                                    elevation={2}
+                                                                    sx={{
+                                                                        p: 3,
+                                                                        height: "100%",
+                                                                        bgcolor: theme.palette.background.card,
+                                                                        borderTop: `3px solid ${theme.palette.primary.main}`,
+                                                                    }}
+                                                                >
+                                                                    <Typography variant="h6" gutterBottom>
+                                                                        {perspective.view}
+                                                                    </Typography>
+                                                                    <Typography variant="body2">
+                                                                        {perspective.description}
+                                                                    </Typography>
+                                                                </Paper>
+                                                            </motion.div>
+                                                        </Grid>
+                                                    )
+                                                )}
                                             </Grid>
                                         </Collapse>
                                     </CardContent>
@@ -416,22 +487,29 @@ const SocialPage = () => {
                                     </CardContent>
                                 </GradientCard>
 
-                                {/* Growing Visibility */}
                                 <ProgressCard>
                                     <CardContent>
-                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <TheaterComedyIcon sx={{ mr: 2, color: theme.palette.tertiary.main }} />
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                                                <TheaterComedyIcon
+                                                    sx={{ mr: 2, color: theme.palette.tertiary.main }}
+                                                />
                                                 <Typography variant="h6">
                                                     {progress.visibility.title}
                                                 </Typography>
                                             </Box>
                                             <IconButton
-                                                onClick={() => handleToggleExpand('visibility', 'main')}
-                                                aria-expanded={isExpanded('visibility', 'main')}
+                                                onClick={() => handleToggleExpand("visibility", "main")}
+                                                aria-expanded={isExpanded("visibility", "main")}
                                                 aria-label="show more"
                                             >
-                                                {isExpanded('visibility', 'main') ? (
+                                                {isExpanded("visibility", "main") ? (
                                                     <KeyboardArrowUpIcon />
                                                 ) : (
                                                     <KeyboardArrowDownIcon />
@@ -443,7 +521,7 @@ const SocialPage = () => {
                                             {progress.visibility.description}
                                         </Typography>
 
-                                        <Collapse in={isExpanded('visibility', 'main')}>
+                                        <Collapse in={isExpanded("visibility", "main")}>
                                             <Grid container spacing={3} sx={{ mt: 3 }}>
                                                 {progress.visibility.examples.map((example, index) => (
                                                     <Grid item xs={12} md={4} key={index}>
@@ -454,14 +532,17 @@ const SocialPage = () => {
                                                         >
                                                             <Card
                                                                 sx={{
-                                                                    height: '100%',
+                                                                    height: "100%",
                                                                     bgcolor: theme.palette.background.card,
                                                                     boxShadow: theme.shadows[2],
                                                                 }}
                                                             >
                                                                 <CardHeader
                                                                     title={example.medium}
-                                                                    titleTypographyProps={{ variant: 'h6', color: 'primary.main' }}
+                                                                    titleTypographyProps={{
+                                                                        variant: "h6",
+                                                                        color: "primary.main",
+                                                                    }}
                                                                 />
                                                                 <CardContent>
                                                                     <Typography variant="subtitle2" gutterBottom>
@@ -471,14 +552,20 @@ const SocialPage = () => {
                                                                         {example.examples.map((ex, idx) => (
                                                                             <ListItem key={idx}>
                                                                                 <ListItemIcon sx={{ minWidth: 30 }}>
-                                                                                    <MoodIcon color="secondary" fontSize="small" />
+                                                                                    <MoodIcon
+                                                                                        color="secondary"
+                                                                                        fontSize="small"
+                                                                                    />
                                                                                 </ListItemIcon>
                                                                                 <ListItemText primary={ex} />
                                                                             </ListItem>
                                                                         ))}
                                                                     </List>
                                                                     <Divider sx={{ my: 2 }} />
-                                                                    <Typography variant="body2" fontStyle="italic">
+                                                                    <Typography
+                                                                        variant="body2"
+                                                                        fontStyle="italic"
+                                                                    >
                                                                         <strong>Impact:</strong> {example.impact}
                                                                     </Typography>
                                                                 </CardContent>
@@ -491,22 +578,29 @@ const SocialPage = () => {
                                     </CardContent>
                                 </ProgressCard>
 
-                                {/* Urban Acceptance */}
                                 <ProgressCard>
                                     <CardContent>
-                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <LanguageIcon sx={{ mr: 2, color: theme.palette.tertiary.main }} />
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                                                <LanguageIcon
+                                                    sx={{ mr: 2, color: theme.palette.tertiary.main }}
+                                                />
                                                 <Typography variant="h6">
                                                     {progress.urban_acceptance.title}
                                                 </Typography>
                                             </Box>
                                             <IconButton
-                                                onClick={() => handleToggleExpand('urban', 'main')}
-                                                aria-expanded={isExpanded('urban', 'main')}
+                                                onClick={() => handleToggleExpand("urban", "main")}
+                                                aria-expanded={isExpanded("urban", "main")}
                                                 aria-label="show more"
                                             >
-                                                {isExpanded('urban', 'main') ? (
+                                                {isExpanded("urban", "main") ? (
                                                     <KeyboardArrowUpIcon />
                                                 ) : (
                                                     <KeyboardArrowDownIcon />
@@ -518,7 +612,7 @@ const SocialPage = () => {
                                             {progress.urban_acceptance.description}
                                         </Typography>
 
-                                        <Collapse in={isExpanded('urban', 'main')}>
+                                        <Collapse in={isExpanded("urban", "main")}>
                                             <Box sx={{ mt: 3 }}>
                                                 <Paper
                                                     elevation={0}
@@ -529,64 +623,105 @@ const SocialPage = () => {
                                                         borderRadius: 2,
                                                     }}
                                                 >
-                                                    <Typography variant="subtitle1" fontWeight="600" gutterBottom>
+                                                    <Typography
+                                                        variant="subtitle1"
+                                                        fontWeight="600"
+                                                        gutterBottom
+                                                    >
                                                         Key Factors
                                                     </Typography>
-                                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 3 }}>
-                                                        {progress.urban_acceptance.factors.map((factor, index) => (
-                                                            <Chip
-                                                                key={index}
-                                                                label={factor}
-                                                                color="secondary"
-                                                                sx={{ fontWeight: 500 }}
-                                                            />
-                                                        ))}
+                                                    <Box
+                                                        sx={{
+                                                            display: "flex",
+                                                            flexWrap: "wrap",
+                                                            gap: 1,
+                                                            mb: 3,
+                                                        }}
+                                                    >
+                                                        {progress.urban_acceptance.factors.map(
+                                                            (factor, index) => (
+                                                                <Chip
+                                                                    key={index}
+                                                                    label={factor}
+                                                                    color="secondary"
+                                                                    sx={{ fontWeight: 500 }}
+                                                                />
+                                                            )
+                                                        )}
                                                     </Box>
 
-                                                    <Typography variant="subtitle1" fontWeight="600" gutterBottom>
+                                                    <Typography
+                                                        variant="subtitle1"
+                                                        fontWeight="600"
+                                                        gutterBottom
+                                                    >
                                                         Notable Events
                                                     </Typography>
                                                     <Grid container spacing={2}>
-                                                        {progress.urban_acceptance.events.map((event, index) => (
-                                                            <Grid item xs={12} sm={6} key={index}>
-                                                                <Card
-                                                                    sx={{
-                                                                        height: '100%',
-                                                                        bgcolor: 'rgba(46, 204, 113, 0.05)',
-                                                                        border: `1px solid ${theme.palette.tertiary.light}`,
-                                                                    }}
-                                                                >
-                                                                    <CardContent>
-                                                                        <Typography variant="h6" color="tertiary.main" gutterBottom>
-                                                                            {event.name}
-                                                                        </Typography>
-                                                                        {event.locations && (
-                                                                            <Box sx={{ mb: 1 }}>
-                                                                                <Typography variant="body2" component="span" fontWeight="bold">
-                                                                                    Locations:
-                                                                                </Typography>{' '}
-                                                                                <Typography variant="body2" component="span">
-                                                                                    {event.locations.join(', ')}
-                                                                                </Typography>
-                                                                            </Box>
-                                                                        )}
-                                                                        {event.example && (
-                                                                            <Box sx={{ mb: 1 }}>
-                                                                                <Typography variant="body2" component="span" fontWeight="bold">
-                                                                                    Example:
-                                                                                </Typography>{' '}
-                                                                                <Typography variant="body2" component="span">
-                                                                                    {event.example}
-                                                                                </Typography>
-                                                                            </Box>
-                                                                        )}
-                                                                        <Typography variant="body2" fontStyle="italic" sx={{ mt: 1 }}>
-                                                                            <strong>Impact:</strong> {event.impact}
-                                                                        </Typography>
-                                                                    </CardContent>
-                                                                </Card>
-                                                            </Grid>
-                                                        ))}
+                                                        {progress.urban_acceptance.events.map(
+                                                            (event, index) => (
+                                                                <Grid item xs={12} sm={6} key={index}>
+                                                                    <Card
+                                                                        sx={{
+                                                                            height: "100%",
+                                                                            bgcolor: "rgba(46, 204, 113, 0.05)",
+                                                                            border: `1px solid ${theme.palette.tertiary.light}`,
+                                                                        }}
+                                                                    >
+                                                                        <CardContent>
+                                                                            <Typography
+                                                                                variant="h6"
+                                                                                color="tertiary.main"
+                                                                                gutterBottom
+                                                                            >
+                                                                                {event.name}
+                                                                            </Typography>
+                                                                            {event.locations && (
+                                                                                <Box sx={{ mb: 1 }}>
+                                                                                    <Typography
+                                                                                        variant="body2"
+                                                                                        component="span"
+                                                                                        fontWeight="bold"
+                                                                                    >
+                                                                                        Locations:
+                                                                                    </Typography>{" "}
+                                                                                    <Typography
+                                                                                        variant="body2"
+                                                                                        component="span"
+                                                                                    >
+                                                                                        {event.locations.join(", ")}
+                                                                                    </Typography>
+                                                                                </Box>
+                                                                            )}
+                                                                            {event.example && (
+                                                                                <Box sx={{ mb: 1 }}>
+                                                                                    <Typography
+                                                                                        variant="body2"
+                                                                                        component="span"
+                                                                                        fontWeight="bold"
+                                                                                    >
+                                                                                        Example:
+                                                                                    </Typography>{" "}
+                                                                                    <Typography
+                                                                                        variant="body2"
+                                                                                        component="span"
+                                                                                    >
+                                                                                        {event.example}
+                                                                                    </Typography>
+                                                                                </Box>
+                                                                            )}
+                                                                            <Typography
+                                                                                variant="body2"
+                                                                                fontStyle="italic"
+                                                                                sx={{ mt: 1 }}
+                                                                            >
+                                                                                <strong>Impact:</strong> {event.impact}
+                                                                            </Typography>
+                                                                        </CardContent>
+                                                                    </Card>
+                                                                </Grid>
+                                                            )
+                                                        )}
                                                     </Grid>
                                                 </Paper>
                                             </Box>
@@ -594,22 +729,31 @@ const SocialPage = () => {
                                     </CardContent>
                                 </ProgressCard>
 
-                                {/* Organizations */}
                                 <ProgressCard>
                                     <CardContent>
-                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <VolunteerActivismIcon sx={{ mr: 2, color: theme.palette.tertiary.main }} />
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                                                <VolunteerActivismIcon
+                                                    sx={{ mr: 2, color: theme.palette.tertiary.main }}
+                                                />
                                                 <Typography variant="h6">
                                                     {progress.organizations.title}
                                                 </Typography>
                                             </Box>
                                             <IconButton
-                                                onClick={() => handleToggleExpand('organizations', 'main')}
-                                                aria-expanded={isExpanded('organizations', 'main')}
+                                                onClick={() =>
+                                                    handleToggleExpand("organizations", "main")
+                                                }
+                                                aria-expanded={isExpanded("organizations", "main")}
                                                 aria-label="show more"
                                             >
-                                                {isExpanded('organizations', 'main') ? (
+                                                {isExpanded("organizations", "main") ? (
                                                     <KeyboardArrowUpIcon />
                                                 ) : (
                                                     <KeyboardArrowDownIcon />
@@ -621,72 +765,91 @@ const SocialPage = () => {
                                             {progress.organizations.description}
                                         </Typography>
 
-                                        <Collapse in={isExpanded('organizations', 'main')}>
+                                        <Collapse in={isExpanded("organizations", "main")}>
                                             <Grid container spacing={3} sx={{ mt: 3 }}>
-                                                {progress.organizations.key_organizations.map((org, index) => (
-                                                    <Grid item xs={12} md={4} key={index}>
-                                                        <motion.div
-                                                            initial={{ opacity: 0, y: 20 }}
-                                                            animate={{ opacity: 1, y: 0 }}
-                                                            transition={{ delay: index * 0.2, duration: 0.5 }}
-                                                        >
-                                                            <Card sx={{ height: '100%', boxShadow: theme.shadows[2] }}>
-                                                                <Box
+                                                {progress.organizations.key_organizations.map(
+                                                    (org, index) => (
+                                                        <Grid item xs={12} md={4} key={index}>
+                                                            <motion.div
+                                                                initial={{ opacity: 0, y: 20 }}
+                                                                animate={{ opacity: 1, y: 0 }}
+                                                                transition={{
+                                                                    delay: index * 0.2,
+                                                                    duration: 0.5,
+                                                                }}
+                                                            >
+                                                                <Card
                                                                     sx={{
-                                                                        height: 8,
-                                                                        width: '100%',
-                                                                        background: theme.palette.gradients?.rainbow,
+                                                                        height: "100%",
+                                                                        boxShadow: theme.shadows[2],
                                                                     }}
-                                                                />
-                                                                <CardContent>
-                                                                    <Typography
-                                                                        variant="h6"
-                                                                        gutterBottom
+                                                                >
+                                                                    <Box
                                                                         sx={{
-                                                                            pb: 1,
-                                                                            mb: 2,
-                                                                            borderBottom: `1px solid ${theme.palette.divider}`,
+                                                                            height: 8,
+                                                                            width: "100%",
+                                                                            background:
+                                                                                theme.palette.gradients?.rainbow,
                                                                         }}
-                                                                    >
-                                                                        {org.name}
-                                                                    </Typography>
-                                                                    <Typography
-                                                                        variant="subtitle2"
-                                                                        color="primary"
-                                                                        gutterBottom
-                                                                        sx={{ mb: 2 }}
-                                                                    >
-                                                                        Focus: {org.focus}
-                                                                    </Typography>
-                                                                    <Typography variant="body2">
-                                                                        <strong>Key Achievements:</strong> {org.achievements}
-                                                                    </Typography>
-                                                                </CardContent>
-                                                            </Card>
-                                                        </motion.div>
-                                                    </Grid>
-                                                ))}
+                                                                    />
+                                                                    <CardContent>
+                                                                        <Typography
+                                                                            variant="h6"
+                                                                            gutterBottom
+                                                                            sx={{
+                                                                                pb: 1,
+                                                                                mb: 2,
+                                                                                borderBottom: `1px solid ${theme.palette.divider}`,
+                                                                            }}
+                                                                        >
+                                                                            {org.name}
+                                                                        </Typography>
+                                                                        <Typography
+                                                                            variant="subtitle2"
+                                                                            color="primary"
+                                                                            gutterBottom
+                                                                            sx={{ mb: 2 }}
+                                                                        >
+                                                                            Focus: {org.focus}
+                                                                        </Typography>
+                                                                        <Typography variant="body2">
+                                                                            <strong>Key Achievements:</strong>{" "}
+                                                                            {org.achievements}
+                                                                        </Typography>
+                                                                    </CardContent>
+                                                                </Card>
+                                                            </motion.div>
+                                                        </Grid>
+                                                    )
+                                                )}
                                             </Grid>
                                         </Collapse>
                                     </CardContent>
                                 </ProgressCard>
 
-                                {/* Corporate Initiatives */}
                                 <ProgressCard>
                                     <CardContent>
-                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <CorporateFareIcon sx={{ mr: 2, color: theme.palette.tertiary.main }} />
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                                                <CorporateFareIcon
+                                                    sx={{ mr: 2, color: theme.palette.tertiary.main }}
+                                                />
                                                 <Typography variant="h6">
                                                     {progress.corporate.title}
                                                 </Typography>
                                             </Box>
                                             <IconButton
-                                                onClick={() => handleToggleExpand('corporate', 'main')}
-                                                aria-expanded={isExpanded('corporate', 'main')}
+                                                onClick={() => handleToggleExpand("corporate", "main")}
+                                                aria-expanded={isExpanded("corporate", "main")}
                                                 aria-label="show more"
                                             >
-                                                {isExpanded('corporate', 'main') ? (
+                                                {isExpanded("corporate", "main") ? (
                                                     <KeyboardArrowUpIcon />
                                                 ) : (
                                                     <KeyboardArrowDownIcon />
@@ -698,7 +861,7 @@ const SocialPage = () => {
                                             {progress.corporate.description}
                                         </Typography>
 
-                                        <Collapse in={isExpanded('corporate', 'main')}>
+                                        <Collapse in={isExpanded("corporate", "main")}>
                                             <Grid container spacing={3} sx={{ mt: 3 }}>
                                                 <Grid item xs={12} md={8}>
                                                     <motion.div
@@ -711,34 +874,38 @@ const SocialPage = () => {
                                                             sx={{
                                                                 p: 3,
                                                                 bgcolor: theme.palette.background.card,
-                                                                height: '100%',
+                                                                height: "100%",
                                                             }}
                                                         >
                                                             <Typography variant="h6" gutterBottom>
                                                                 Diversity and Inclusion Initiatives
                                                             </Typography>
                                                             <List>
-                                                                {progress.corporate.initiatives.map((initiative, index) => (
-                                                                    <ListItem
-                                                                        key={index}
-                                                                        sx={{
-                                                                            py: 1.5,
-                                                                            px: 2,
-                                                                            mb: 1,
-                                                                            bgcolor: 'rgba(52, 152, 219, 0.05)',
-                                                                            borderRadius: 1,
-                                                                        }}
-                                                                    >
-                                                                        <ListItemIcon>
-                                                                            <PeopleIcon color="secondary" />
-                                                                        </ListItemIcon>
-                                                                        <ListItemText
-                                                                            primary={initiative.type}
-                                                                            secondary={initiative.examples}
-                                                                            primaryTypographyProps={{ fontWeight: 'bold' }}
-                                                                        />
-                                                                    </ListItem>
-                                                                ))}
+                                                                {progress.corporate.initiatives.map(
+                                                                    (initiative, index) => (
+                                                                        <ListItem
+                                                                            key={index}
+                                                                            sx={{
+                                                                                py: 1.5,
+                                                                                px: 2,
+                                                                                mb: 1,
+                                                                                bgcolor: "rgba(52, 152, 219, 0.05)",
+                                                                                borderRadius: 1,
+                                                                            }}
+                                                                        >
+                                                                            <ListItemIcon>
+                                                                                <PeopleIcon color="secondary" />
+                                                                            </ListItemIcon>
+                                                                            <ListItemText
+                                                                                primary={initiative.type}
+                                                                                secondary={initiative.examples}
+                                                                                primaryTypographyProps={{
+                                                                                    fontWeight: "bold",
+                                                                                }}
+                                                                            />
+                                                                        </ListItem>
+                                                                    )
+                                                                )}
                                                             </List>
                                                         </Paper>
                                                     </motion.div>
@@ -752,31 +919,37 @@ const SocialPage = () => {
                                                         <Card
                                                             sx={{
                                                                 p: 3,
-                                                                height: '100%',
+                                                                height: "100%",
                                                                 background: theme.palette.gradients?.primary,
-                                                                color: 'white',
+                                                                color: "white",
                                                             }}
                                                         >
-                                                            <Typography variant="h6" gutterBottom sx={{ color: 'white' }}>
+                                                            <Typography
+                                                                variant="h6"
+                                                                gutterBottom
+                                                                sx={{ color: "white" }}
+                                                            >
                                                                 Leading Companies
                                                             </Typography>
                                                             <Box
                                                                 sx={{
-                                                                    display: 'flex',
-                                                                    flexDirection: 'column',
+                                                                    display: "flex",
+                                                                    flexDirection: "column",
                                                                     gap: 1,
                                                                 }}
                                                             >
-                                                                {progress.corporate.companies.map((company, index) => (
-                                                                    <Chip
-                                                                        key={index}
-                                                                        label={company}
-                                                                        sx={{
-                                                                            bgcolor: 'rgba(255, 104, 245, 0.2)',
-                                                                            fontSize: '0.9rem',
-                                                                        }}
-                                                                    />
-                                                                ))}
+                                                                {progress.corporate.companies.map(
+                                                                    (company, index) => (
+                                                                        <Chip
+                                                                            key={index}
+                                                                            label={company}
+                                                                            sx={{
+                                                                                bgcolor: "rgba(255, 104, 245, 0.2)",
+                                                                                fontSize: "0.9rem",
+                                                                            }}
+                                                                        />
+                                                                    )
+                                                                )}
                                                             </Box>
                                                         </Card>
                                                     </motion.div>
@@ -795,7 +968,7 @@ const SocialPage = () => {
                         py: 6,
                         px: 4,
                         textAlign: "center",
-                        background: theme.palette.background.gradient || 'rgba(0,0,0,0.03)',
+                        background: theme.palette.background.gradient || "rgba(0,0,0,0.03)",
                         borderRadius: theme.shape.borderRadius,
                         mb: 4,
                     }}
@@ -808,35 +981,42 @@ const SocialPage = () => {
                             variant="body1"
                             sx={{ mb: 4, maxWidth: "800px", mx: "auto" }}
                         >
-                            While significant challenges remain for LGBTQAI+
-                            communities, we are working tirelessly to create a
-                            more inclusive society. Our goal is to empower
-                            individuals to express their sexuality and gender
-                            identity without fear of discrimination or
-                            harassment.
+                            While significant challenges remain for LGBTQAI+ communities, we
+                            are working tirelessly to create a more inclusive society. Our
+                            goal is to empower individuals to express their sexuality and
+                            gender identity without fear of discrimination or harassment.
                         </Typography>
                     </Container>
                 </Box>
-
             </Container>
+
+            <Card sx={{ mb: 6 }}>
+                <CardContent>
+                    <CardFooter sx={{ display: "flex", justifyContent: "space-between" }}>
+                        <NavigationButton
+                            variant="outlined"
+                            color="primary"
+                            component={RouterLink}
+                            to="/resources"
+                            startIcon={<ArrowBackIcon />}
+                        >
+                            Previous
+                        </NavigationButton>
+
+                        <NavigationButton
+                            variant="contained"
+                            color="primary"
+                            component={RouterLink}
+                            to="/glossary"
+                            endIcon={<ArrowForwardIcon />}
+                        >
+                            Next: Glossary
+                        </NavigationButton>
+                    </CardFooter>
+                </CardContent>
+            </Card>
         </motion.div>
     );
-
-    return (
-        <SectionTemplate
-          sectionId="social"
-          title="Social Impact & Community Engagement"
-          subtitle="Building inclusive communities and driving social change"
-          introduction={socialData.introduction}
-          subsections={subsections}
-          activeSubsection={activeSubsection}
-          prevLink={{ path: "/resources", label: "Resources & Support" }}
-          nextLink={{ path: "/glossary", label: "Glossary" }}
-          renderCustomSubsections={renderCustomSubsections}
-        >
-          {renderContent()}
-        </SectionTemplate>
-      );
 };
 
 export default SocialPage;
