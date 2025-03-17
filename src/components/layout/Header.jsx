@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   AppBar, Toolbar, Typography, Box, IconButton, Button,
   Drawer, List, ListItem, ListItemIcon, ListItemText,
@@ -89,10 +89,10 @@ const navigationItems = [
   { text: 'Identities', icon: <VisibilityIcon />, path: '/identities' },
   { text: 'Legal', icon: <GavelIcon />, path: '/legal' },
   { text: 'Challenges', icon: <PsychologyIcon />, path: '/challenges' },
-  // { text: 'Progress', icon: <SchoolIcon />, path: '/progress' },
   { text: 'Resources', icon: <LibraryBooksIcon />, path: '/resources' },
   { text: 'Social', icon: <GroupsIcon />, path: '/social' },
   { text: 'Glossary', icon: <MenuBookIcon />, path: '/glossary' },
+  { text: 'Quiz', icon: <MenuBookIcon />, path: '/quiz' },
 ];
 
 const primaryNavItems = navigationItems.slice(0, 4);
@@ -104,8 +104,18 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { getOverallProgress } = useProgress();
+  const [progress, setProgress] = useState(getOverallProgress());
 
-  const progress = getOverallProgress();
+  useEffect(() => {
+    const updateProgress = () => setProgress(getOverallProgress());
+    updateProgress();
+
+    const interval = setInterval(updateProgress, 500);
+
+    return () => clearInterval(interval);
+  }, [getOverallProgress]);
+
+
 
   const toggleDrawer = (open) => (event) => {
     if (
@@ -167,7 +177,7 @@ const Header = () => {
             sx={{
               bgcolor: isActive(item.path) ? 'background.card' : 'transparent',
               borderLeft: isActive(item.path) ? `4px solid ${theme.palette.primary.main}` : 'none',
-              pl: isActive(item.path) ? 2 : 3,
+              pl: isActive(item.path) ? 2 : 2,
             }}
           >
             <ListItemIcon sx={{
@@ -222,21 +232,9 @@ const Header = () => {
           )}
 
           <Box sx={{ display: 'flex', alignItems: 'center', ml: 'auto' }}>
-            <Typography variant="body2" color="text.secondary" sx={{ mr: 1 }}>
+            <Typography variant="body2" color="text.secondary" >
               {Math.round(progress)}% Complete
             </Typography>
-            <Avatar
-              sx={{
-                width: 40,
-                height: 40,
-                background: progress >= 100 ? theme.rainbowTheme.gradients?.rainbow : theme.palette.background.card,
-                color: theme.palette.text.primary,
-                border: `2px solid ${theme.palette.background.paper}`,
-                boxShadow: theme.shadows[1],
-              }}
-            >
-              {Math.round(progress)}%
-            </Avatar>
 
             {isMobile && (
               <IconButton

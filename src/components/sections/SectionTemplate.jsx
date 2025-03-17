@@ -1,17 +1,23 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import {
-  Box, Typography, Paper, Button, Divider,
-  Grid, Card, CardContent,
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { motion } from 'framer-motion';
-import { Link as RouterLink } from 'react-router-dom';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+  Box,
+  Typography,
+  Paper,
+  Button,
+  Divider,
+  Grid,
+  Card,
+  CardContent,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { motion } from "framer-motion";
+import { Link as RouterLink } from "react-router-dom";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
-import SectionHeader from '../ui/SectionHeader';
-import ProgressIndicator from '../ui/ProgressIndicator';
-import { useProgress } from '../../contexts/ProgressContext';
+import SectionHeader from "../ui/SectionHeader";
+import ProgressIndicator from "../ui/ProgressIndicator";
+import { useProgress } from "../../contexts/ProgressContext";
 
 const ContentPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -21,22 +27,22 @@ const ContentPaper = styled(Paper)(({ theme }) => ({
 }));
 
 const NavigationButtons = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'space-between',
+  display: "flex",
+  justifyContent: "space-between",
   marginTop: theme.spacing(4),
   marginBottom: theme.spacing(4),
 }));
 
 const SubsectionCard = styled(Card)(({ theme, isActive }) => ({
   marginBottom: theme.spacing(2),
-  cursor: 'pointer',
-  transition: 'all 0.2s ease',
+  cursor: "pointer",
+  transition: "all 0.2s ease",
   ...(isActive && {
     borderLeft: `4px solid ${theme.palette.primary.main}`,
     backgroundColor: theme.palette.background.card,
   }),
-  '&:hover': {
-    transform: 'translateX(5px)',
+  "&:hover": {
+    transform: "translateX(5px)",
     boxShadow: theme.shadows[2],
   },
 }));
@@ -59,7 +65,7 @@ const SectionTemplate = ({
     if (activeSubsection) {
       markAsCompleted(sectionId, activeSubsection);
     }
-  }, [sectionId, activeSubsection, markAsCompleted]);
+  }, [sectionId, activeSubsection]);
 
   const progress = getSectionCompletion(sectionId);
 
@@ -69,17 +75,14 @@ const SectionTemplate = ({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <SectionHeader
-        title={title}
-        subtitle={subtitle}
-      />
+      <SectionHeader title={title} subtitle={subtitle} />
 
       <Grid container spacing={4}>
         <Grid item xs={12} md={8}>
           {introduction && (
             <ContentPaper>
               <Typography variant="h5" gutterBottom>
-                {introduction.title || 'Introduction'}
+                {introduction.title || "Introduction"}
               </Typography>
               <Typography variant="body1" paragraph>
                 {introduction.description}
@@ -98,7 +101,7 @@ const SectionTemplate = ({
                 variant="outlined"
                 startIcon={<ArrowBackIcon />}
               >
-                {prevLink.label || 'Previous'}
+                {prevLink.label || "Previous"}
               </Button>
             )}
 
@@ -112,23 +115,20 @@ const SectionTemplate = ({
                 color="primary"
                 endIcon={<ArrowForwardIcon />}
               >
-                {nextLink.label || 'Next'}
+                {nextLink.label || "Next"}
               </Button>
             )}
           </NavigationButtons>
         </Grid>
 
         <Grid item xs={12} md={4}>
-          <Card sx={{ position: 'sticky', top: '100px' }}>
+          <Card sx={{ position: "sticky", top: "100px" }}>
             <CardContent>
               <Typography variant="h6" gutterBottom>
                 Section Progress
               </Typography>
 
-              <ProgressIndicator
-                label={title}
-                value={progress || 0}
-              />
+              <ProgressIndicator label={title} value={progress} />
 
               <Divider sx={{ my: 2 }} />
 
@@ -136,10 +136,9 @@ const SectionTemplate = ({
                 In This Section
               </Typography>
 
-              {renderCustomSubsections ? (
-                renderCustomSubsections()
-              ) : (
-                subsections.map((subsection) => (
+              {renderCustomSubsections
+                ? renderCustomSubsections()
+                : subsections.map((subsection) => (
                   <SubsectionCard
                     key={subsection.id}
                     isActive={activeSubsection === subsection.id}
@@ -157,8 +156,7 @@ const SectionTemplate = ({
                       )}
                     </CardContent>
                   </SubsectionCard>
-                ))
-              )}
+                ))}
             </CardContent>
           </Card>
         </Grid>

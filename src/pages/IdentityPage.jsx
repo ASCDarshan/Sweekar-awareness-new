@@ -29,11 +29,13 @@ import CategoryIcon from "@mui/icons-material/Category";
 import InfoIcon from "@mui/icons-material/Info";
 import LabelIcon from "@mui/icons-material/Label";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Link as RouterLink } from "react-router-dom";
 
 import SectionHeader from "../components/ui/SectionHeader";
 import { identitiesData } from "../data/identitiesData";
 import SectionTemplate from "../components/sections/SectionTemplate";
+import { useProgress } from "../contexts/ProgressContext";
 
 const CategoryCard = styled(Card)(({ theme }) => ({
     height: "100%",
@@ -72,16 +74,14 @@ const CategoryChip = styled(Chip)(({ theme, category }) => {
     };
 });
 
-// Navigation button at the bottom of each section
 const NavigationButton = styled(Button)(({ theme }) => ({
     marginTop: theme.spacing(3),
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
 }));
 
-// Card footer with navigation
 const CardFooter = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'flex-end',
+    display: "flex",
+    justifyContent: "flex-end",
     paddingTop: theme.spacing(2),
     borderTop: `1px solid ${theme.palette.divider}`,
     marginTop: theme.spacing(3),
@@ -89,22 +89,30 @@ const CardFooter = styled(Box)(({ theme }) => ({
 
 const IdentityPage = () => {
     const theme = useTheme();
+    const { markPageAsVisited } = useProgress();
     const [currentTab, setCurrentTab] = useState(0);
     const [selectedTerm, setSelectedTerm] = useState(null);
     const title = identitiesData?.introduction?.title;
     const description = identitiesData?.introduction?.description;
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
     const [drawerOpen, setDrawerOpen] = useState(false);
 
-    // Open the drawer when selectedTerm changes on mobile
     useEffect(() => {
         if (isMobile && selectedTerm) {
             setDrawerOpen(true);
         }
     }, [selectedTerm, isMobile]);
 
+    useEffect(() => {
+        markPageAsVisited("/history");
+    }, []);
+
     const toggleDrawer = (open) => (event) => {
-        if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+        if (
+            event &&
+            event.type === "keydown" &&
+            (event.key === "Tab" || event.key === "Shift")
+        ) {
             return;
         }
         setDrawerOpen(open);
@@ -115,11 +123,7 @@ const IdentityPage = () => {
             <Typography variant="h4" gutterBottom>
                 {selectedTerm?.term}
             </Typography>
-            <Chip
-                label={selectedTerm?.category}
-                size="medium"
-                sx={{ mb: 3 }}
-            />
+            <Chip label={selectedTerm?.category} size="medium" sx={{ mb: 3 }} />
             <Typography variant="body1" paragraph>
                 {selectedTerm?.definition}
             </Typography>
@@ -137,7 +141,9 @@ const IdentityPage = () => {
     const filterIdentities = () => {
         if (currentTab === 0) return identitiesData.identities;
         const category = identitiesData.categories[currentTab - 1].name;
-        return identitiesData.identities.filter((item) => item.category === category);
+        return identitiesData.identities.filter(
+            (item) => item.category === category
+        );
     };
 
     const containerVariants = {
@@ -166,13 +172,9 @@ const IdentityPage = () => {
         >
             <Container maxWidth="lg">
                 <Box sx={{ mb: 6 }}>
-                    <SectionHeader
-                        title={title}
-                        subtitle={description}
-                    />
+                    <SectionHeader title={title} subtitle={description} />
                 </Box>
 
-                {/* TERMINOLOGY SECTION - Now at the top */}
                 <Box sx={{ mb: 6 }}>
                     <SectionHeader
                         title="LGBTQAI+ Terminology"
@@ -213,7 +215,14 @@ const IdentityPage = () => {
                                             onClick={() => handleTermSelect(item)}
                                         >
                                             <CardContent sx={{ pb: "16px !important" }}>
-                                                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
+                                                <Box
+                                                    sx={{
+                                                        display: "flex",
+                                                        justifyContent: "space-between",
+                                                        alignItems: "center",
+                                                        mb: 1,
+                                                    }}
+                                                >
                                                     <Typography variant="h6">{item.term}</Typography>
                                                     <CategoryChip
                                                         label={item.category}
@@ -239,24 +248,36 @@ const IdentityPage = () => {
                                     >
                                         <Box
                                             sx={{
-                                                width: '80vw',
+                                                width: "80vw",
                                                 p: 3,
-                                                bgcolor: 'background.paper',
+                                                bgcolor: "background.paper",
                                             }}
                                         >
-                                            {selectedTerm ? content : (
+                                            {selectedTerm ? (
+                                                content
+                                            ) : (
                                                 <Box
                                                     sx={{
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        height: '100%',
+                                                        display: "flex",
+                                                        flexDirection: "column",
+                                                        alignItems: "center",
+                                                        justifyContent: "center",
+                                                        height: "100%",
                                                         p: 4,
                                                     }}
                                                 >
-                                                    <InfoIcon sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
-                                                    <Typography variant="h6" color="text.secondary" align="center">
+                                                    <InfoIcon
+                                                        sx={{
+                                                            fontSize: 60,
+                                                            color: "text.secondary",
+                                                            mb: 2,
+                                                        }}
+                                                    />
+                                                    <Typography
+                                                        variant="h6"
+                                                        color="text.secondary"
+                                                        align="center"
+                                                    >
                                                         Select a term from the list to view its definition
                                                     </Typography>
                                                 </Box>
@@ -268,25 +289,33 @@ const IdentityPage = () => {
                                 <Paper
                                     sx={{
                                         p: 3,
-                                        height: '100%',
-                                        position: 'sticky',
+                                        height: "100%",
+                                        position: "sticky",
                                         top: 20,
-                                        bgcolor: 'background.paper',
+                                        bgcolor: "background.paper",
                                     }}
                                 >
-                                    {selectedTerm ? content : (
+                                    {selectedTerm ? (
+                                        content
+                                    ) : (
                                         <Box
                                             sx={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                height: '100%',
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                height: "100%",
                                                 p: 4,
                                             }}
                                         >
-                                            <InfoIcon sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
-                                            <Typography variant="h6" color="text.secondary" align="center">
+                                            <InfoIcon
+                                                sx={{ fontSize: 60, color: "text.secondary", mb: 2 }}
+                                            />
+                                            <Typography
+                                                variant="h6"
+                                                color="text.secondary"
+                                                align="center"
+                                            >
                                                 Select a term from the list to view its definition
                                             </Typography>
                                         </Box>
@@ -297,7 +326,6 @@ const IdentityPage = () => {
                     </Grid>
                 </Box>
 
-                {/* IDENTITY CATEGORIES SECTION */}
                 <Box sx={{ mb: 6 }}>
                     <SectionHeader
                         title="Identity Categories"
@@ -328,7 +356,11 @@ const IdentityPage = () => {
                                                     {category.name}
                                                 </Typography>
                                             </Box>
-                                            <Typography variant="body2" color="text.secondary" paragraph>
+                                            <Typography
+                                                variant="body2"
+                                                color="text.secondary"
+                                                paragraph
+                                            >
                                                 {category.description}
                                             </Typography>
                                             <Divider sx={{ my: 2 }} />
@@ -354,7 +386,6 @@ const IdentityPage = () => {
                     </Grid>
                 </Box>
 
-                {/* INTRODUCTION SECTIONS */}
                 <Box sx={{ mb: 6 }}>
                     <Grid container spacing={4}>
                         {identitiesData.sections.map((section, index) => (
@@ -392,13 +423,14 @@ const IdentityPage = () => {
                     </Grid>
                 </Box>
 
-                {/* CLOSING BANNER */}
                 <Box
                     sx={{
                         py: 8,
                         px: 4,
                         textAlign: "center",
-                        background: theme.palette.background.gradient || theme.palette.background.default,
+                        background:
+                            theme.palette.background.gradient ||
+                            theme.palette.background.default,
                         borderRadius: theme.shape.borderRadius,
                         mb: 4,
                     }}
@@ -411,17 +443,29 @@ const IdentityPage = () => {
                             variant="body1"
                             sx={{ mb: 4, maxWidth: "800px", mx: "auto" }}
                         >
-                            Understanding sexual orientation and gender identity is an ongoing process.
-                            These concepts can evolve over time, both for individuals and for society.
-                            Approach these topics with an open mind and a commitment to learning.
+                            Understanding sexual orientation and gender identity is an ongoing
+                            process. These concepts can evolve over time, both for individuals
+                            and for society. Approach these topics with an open mind and a
+                            commitment to learning.
                         </Typography>
                     </Container>
                 </Box>
 
-                {/* Navigation to Next Section */}
                 <Card sx={{ mb: 6 }}>
                     <CardContent>
-                        <CardFooter>
+                        <CardFooter
+                            sx={{ display: "flex", justifyContent: "space-between" }}
+                        >
+                            <NavigationButton
+                                variant="outlined"
+                                color="primary"
+                                component={RouterLink}
+                                to="/history"
+                                startIcon={<ArrowBackIcon />}
+                            >
+                                Previous
+                            </NavigationButton>
+
                             <NavigationButton
                                 variant="contained"
                                 color="primary"
@@ -436,14 +480,7 @@ const IdentityPage = () => {
                 </Card>
             </Container>
         </motion.div>
-
-
-
     );
-
-   
-       
-      
 };
 
 export default IdentityPage;

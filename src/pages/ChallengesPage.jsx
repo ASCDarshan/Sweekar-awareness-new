@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Box,
     Grid,
@@ -20,11 +20,11 @@ import {
     AccordionDetails,
     LinearProgress,
     Stack,
+    Button,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { motion } from "framer-motion";
 
-// Icons
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PsychologyIcon from "@mui/icons-material/Psychology";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
@@ -37,8 +37,12 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
 import SectionHeader from "../components/ui/SectionHeader";
 import { challengesData } from "../data/challengesData";
+import { useProgress } from "../contexts/ProgressContext";
 
-// Styled components
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Link as RouterLink } from "react-router-dom";
+
 const GradientCard = styled(Card)(({ theme }) => ({
     position: "relative",
     overflow: "hidden",
@@ -63,7 +67,8 @@ const RainbowCard = styled(Card)(({ theme }) => ({
         left: 0,
         right: 0,
         height: "5px",
-        background: theme.palette.gradients?.rainbow ||
+        background:
+            theme.palette.gradients?.rainbow ||
             "linear-gradient(90deg, #E74C3C, #F39C12, #F1C40F, #2ECC71, #3498DB, #9B59B6)",
     },
     transition: "transform 0.3s ease, box-shadow 0.3s ease",
@@ -107,28 +112,28 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     },
 }));
 
-// Helper function to get icon by type
-const getIconByType = (type) => {
-    switch (type) {
-        case "mental":
-            return <PsychologyIcon />;
-        case "stigma":
-            return <SentimentVeryDissatisfiedIcon />;
-        case "healthcare":
-            return <LocalHospitalIcon />;
-        case "education":
-            return <SchoolIcon />;
-        case "religious":
-            return <ChurchIcon />;
-        default:
-            return <PeopleIcon />;
-    }
-};
+const NavigationButton = styled(Button)(({ theme }) => ({
+    marginTop: theme.spacing(3),
+    alignSelf: "flex-end",
+}));
 
-// Main component
+const CardFooter = styled(Box)(({ theme }) => ({
+    display: "flex",
+    justifyContent: "flex-end",
+    paddingTop: theme.spacing(2),
+    borderTop: `1px solid ${theme.palette.divider}`,
+    marginTop: theme.spacing(3),
+}));
+
+
 const ChallengesPage = () => {
     const theme = useTheme();
     const [expanded, setExpanded] = useState(false);
+    const { markPageAsVisited } = useProgress();
+
+    useEffect(() => {
+        markPageAsVisited("/challenges");
+    }, []);
 
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
@@ -148,7 +153,6 @@ const ChallengesPage = () => {
                     />
                 </Box>
 
-                {/* Stigma and Discrimination Section */}
                 <Box sx={{ mb: 6 }}>
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -159,7 +163,12 @@ const ChallengesPage = () => {
                         <GradientCard>
                             <CardHeader
                                 title={challengesData.stigmaAndDiscrimination.title}
-                                avatar={<SentimentVeryDissatisfiedIcon fontSize="large" color="error" />}
+                                avatar={
+                                    <SentimentVeryDissatisfiedIcon
+                                        fontSize="large"
+                                        color="error"
+                                    />
+                                }
                             />
                             <CardContent>
                                 <Typography variant="body1" paragraph>
@@ -167,56 +176,73 @@ const ChallengesPage = () => {
                                 </Typography>
 
                                 <Grid container spacing={3} sx={{ mt: 2 }}>
-                                    {challengesData.stigmaAndDiscrimination.examples.map((example, index) => (
-                                        <Grid item xs={12} md={6} key={index}>
-                                            <motion.div
-                                                initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
-                                                whileInView={{ opacity: 1, x: 0 }}
-                                                viewport={{ once: true }}
-                                                transition={{ delay: index * 0.1, duration: 0.5 }}
-                                            >
-                                                <Paper
-                                                    elevation={3}
-                                                    sx={{
-                                                        p: 3,
-                                                        height: "100%",
-                                                        position: "relative",
-                                                        overflow: "hidden",
-                                                        "&::before": {
-                                                            content: '""',
-                                                            position: "absolute",
-                                                            left: 0,
-                                                            top: 0,
-                                                            bottom: 0,
-                                                            width: "4px",
-                                                            backgroundColor: theme.palette.accent1?.main || theme.palette.error.main,
-                                                        }
+                                    {challengesData.stigmaAndDiscrimination.examples.map(
+                                        (example, index) => (
+                                            <Grid item xs={12} md={6} key={index}>
+                                                <motion.div
+                                                    initial={{
+                                                        opacity: 0,
+                                                        x: index % 2 === 0 ? -20 : 20,
                                                     }}
+                                                    whileInView={{ opacity: 1, x: 0 }}
+                                                    viewport={{ once: true }}
+                                                    transition={{ delay: index * 0.1, duration: 0.5 }}
                                                 >
-                                                    <Typography variant="h6" gutterBottom fontWeight="600">
-                                                        {example.type}
-                                                    </Typography>
-                                                    <Typography variant="body2" paragraph>
-                                                        {example.description}
-                                                    </Typography>
-                                                    <Divider sx={{ my: 1.5 }} />
-                                                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                                                        Impact:
-                                                    </Typography>
-                                                    <Typography variant="body2" sx={{ fontStyle: "italic" }}>
-                                                        {example.impact}
-                                                    </Typography>
-                                                </Paper>
-                                            </motion.div>
-                                        </Grid>
-                                    ))}
+                                                    <Paper
+                                                        elevation={3}
+                                                        sx={{
+                                                            p: 3,
+                                                            height: "100%",
+                                                            position: "relative",
+                                                            overflow: "hidden",
+                                                            "&::before": {
+                                                                content: '""',
+                                                                position: "absolute",
+                                                                left: 0,
+                                                                top: 0,
+                                                                bottom: 0,
+                                                                width: "4px",
+                                                                backgroundColor:
+                                                                    theme.palette.accent1?.main ||
+                                                                    theme.palette.error.main,
+                                                            },
+                                                        }}
+                                                    >
+                                                        <Typography
+                                                            variant="h6"
+                                                            gutterBottom
+                                                            fontWeight="600"
+                                                        >
+                                                            {example.type}
+                                                        </Typography>
+                                                        <Typography variant="body2" paragraph>
+                                                            {example.description}
+                                                        </Typography>
+                                                        <Divider sx={{ my: 1.5 }} />
+                                                        <Typography
+                                                            variant="subtitle2"
+                                                            color="text.secondary"
+                                                            gutterBottom
+                                                        >
+                                                            Impact:
+                                                        </Typography>
+                                                        <Typography
+                                                            variant="body2"
+                                                            sx={{ fontStyle: "italic" }}
+                                                        >
+                                                            {example.impact}
+                                                        </Typography>
+                                                    </Paper>
+                                                </motion.div>
+                                            </Grid>
+                                        )
+                                    )}
                                 </Grid>
                             </CardContent>
                         </GradientCard>
                     </motion.div>
                 </Box>
 
-                {/* Mental Health Section */}
                 <Box sx={{ mb: 6 }}>
                     <SectionHeader
                         title={challengesData.mentalHealth.title}
@@ -239,13 +265,17 @@ const ChallengesPage = () => {
                                             avatar={
                                                 <PsychologyIcon
                                                     sx={{
-                                                        color: theme.palette.primary.main
+                                                        color: theme.palette.primary.main,
                                                     }}
                                                 />
                                             }
                                         />
                                         <CardContent>
-                                            <Typography variant="subtitle2" gutterBottom color="text.secondary">
+                                            <Typography
+                                                variant="subtitle2"
+                                                gutterBottom
+                                                color="text.secondary"
+                                            >
                                                 Contributing Factors:
                                             </Typography>
                                             <List dense>
@@ -276,29 +306,33 @@ const ChallengesPage = () => {
                                 elevation={3}
                                 sx={{
                                     p: 3,
-                                    bgcolor: theme.palette.accent2?.light || theme.palette.info.light,
-                                    color: theme.palette.getContrastText(theme.palette.accent2?.light || theme.palette.info.light)
+                                    bgcolor:
+                                        theme.palette.accent2?.light || theme.palette.info.light,
+                                    color: theme.palette.getContrastText(
+                                        theme.palette.accent2?.light || theme.palette.info.light
+                                    ),
                                 }}
                             >
                                 <Typography variant="h6" gutterBottom>
                                     Barriers to Accessing Mental Health Support
                                 </Typography>
                                 <List>
-                                    {challengesData.mentalHealth.barriersToHelp.map((barrier, index) => (
-                                        <ListItem key={index}>
-                                            <ListItemIcon>
-                                                <WarningIcon sx={{ color: "inherit" }} />
-                                            </ListItemIcon>
-                                            <ListItemText primary={barrier} />
-                                        </ListItem>
-                                    ))}
+                                    {challengesData.mentalHealth.barriersToHelp.map(
+                                        (barrier, index) => (
+                                            <ListItem key={index}>
+                                                <ListItemIcon>
+                                                    <WarningIcon sx={{ color: "inherit" }} />
+                                                </ListItemIcon>
+                                                <ListItemText primary={barrier} />
+                                            </ListItem>
+                                        )
+                                    )}
                                 </List>
                             </Paper>
                         </Box>
                     </motion.div>
                 </Box>
 
-                {/* Religious and Cultural Beliefs Section */}
                 <Box sx={{ mb: 6 }}>
                     <SectionHeader
                         title={challengesData.religiousCultural.title}
@@ -312,35 +346,38 @@ const ChallengesPage = () => {
                         transition={{ duration: 0.7 }}
                     >
                         <Grid container spacing={3}>
-                            {challengesData.religiousCultural.perspectives.map((perspective, index) => (
-                                <Grid item xs={12} md={4} key={index}>
-                                    <StyledAccordion
-                                        expanded={expanded === `panel-religious-${index}`}
-                                        onChange={handleChange(`panel-religious-${index}`)}
-                                    >
-                                        <AccordionSummary
-                                            expandIcon={<ExpandMoreIcon />}
-                                            aria-controls={`panel${index}a-content`}
-                                            id={`panel${index}a-header`}
+                            {challengesData.religiousCultural.perspectives.map(
+                                (perspective, index) => (
+                                    <Grid item xs={12} md={4} key={index}>
+                                        <StyledAccordion
+                                            expanded={expanded === `panel-religious-${index}`}
+                                            onChange={handleChange(`panel-religious-${index}`)}
                                         >
-                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <ChurchIcon color="primary" sx={{ mr: 1.5 }} />
-                                                <Typography variant="subtitle1">{perspective.view}</Typography>
-                                            </Box>
-                                        </AccordionSummary>
-                                        <AccordionDetails>
-                                            <Typography variant="body2">
-                                                {perspective.description}
-                                            </Typography>
-                                        </AccordionDetails>
-                                    </StyledAccordion>
-                                </Grid>
-                            ))}
+                                            <AccordionSummary
+                                                expandIcon={<ExpandMoreIcon />}
+                                                aria-controls={`panel${index}a-content`}
+                                                id={`panel${index}a-header`}
+                                            >
+                                                <Box sx={{ display: "flex", alignItems: "center" }}>
+                                                    <ChurchIcon color="primary" sx={{ mr: 1.5 }} />
+                                                    <Typography variant="subtitle1">
+                                                        {perspective.view}
+                                                    </Typography>
+                                                </Box>
+                                            </AccordionSummary>
+                                            <AccordionDetails>
+                                                <Typography variant="body2">
+                                                    {perspective.description}
+                                                </Typography>
+                                            </AccordionDetails>
+                                        </StyledAccordion>
+                                    </Grid>
+                                )
+                            )}
                         </Grid>
                     </motion.div>
                 </Box>
 
-                {/* Healthcare and Education Section */}
                 <Box sx={{ mb: 6 }}>
                     <Grid container spacing={4}>
                         <Grid item xs={12} md={6}>
@@ -350,7 +387,7 @@ const ChallengesPage = () => {
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.7 }}
                             >
-                                <Card sx={{ height: '100%' }}>
+                                <Card sx={{ height: "100%" }}>
                                     <CardHeader
                                         title={challengesData.healthcare.title}
                                         avatar={<LocalHospitalIcon color="primary" />}
@@ -367,15 +404,17 @@ const ChallengesPage = () => {
                                                 </Stack>
                                                 <LinearProgress
                                                     variant="determinate"
-                                                    value={(100 - index * 15)}
+                                                    value={100 - index * 15}
                                                     sx={{
                                                         mt: 1,
                                                         height: 6,
                                                         borderRadius: 3,
                                                         bgcolor: theme.palette.background.default,
-                                                        '& .MuiLinearProgress-bar': {
-                                                            bgcolor: theme.palette.accent2?.main || theme.palette.info.main,
-                                                        }
+                                                        "& .MuiLinearProgress-bar": {
+                                                            bgcolor:
+                                                                theme.palette.accent2?.main ||
+                                                                theme.palette.info.main,
+                                                        },
                                                     }}
                                                 />
                                             </Box>
@@ -392,7 +431,7 @@ const ChallengesPage = () => {
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.7 }}
                             >
-                                <Card sx={{ height: '100%' }}>
+                                <Card sx={{ height: "100%" }}>
                                     <CardHeader
                                         title={challengesData.education.title}
                                         avatar={<SchoolIcon color="primary" />}
@@ -402,14 +441,18 @@ const ChallengesPage = () => {
                                             {challengesData.education.description}
                                         </Typography>
                                         <Stack direction="row" flexWrap="wrap" sx={{ mt: 2 }}>
-                                            {challengesData.education.problems.map((problem, index) => (
-                                                <ImpactChip
-                                                    key={index}
-                                                    label={problem}
-                                                    severity={index < 2 ? "high" : index < 4 ? "medium" : "low"}
-                                                    icon={<WarningIcon />}
-                                                />
-                                            ))}
+                                            {challengesData.education.problems.map(
+                                                (problem, index) => (
+                                                    <ImpactChip
+                                                        key={index}
+                                                        label={problem}
+                                                        severity={
+                                                            index < 2 ? "high" : index < 4 ? "medium" : "low"
+                                                        }
+                                                        icon={<WarningIcon />}
+                                                    />
+                                                )
+                                            )}
                                         </Stack>
                                     </CardContent>
                                 </Card>
@@ -418,13 +461,12 @@ const ChallengesPage = () => {
                     </Grid>
                 </Box>
 
-                {/* Closing Call to Action */}
                 <Box
                     sx={{
                         py: 6,
                         px: 4,
                         textAlign: "center",
-                        background: theme.palette.background.gradient || 'rgba(0,0,0,0.03)',
+                        background: theme.palette.background.gradient || "rgba(0,0,0,0.03)",
                         borderRadius: theme.shape.borderRadius,
                         mb: 4,
                     }}
@@ -437,31 +479,44 @@ const ChallengesPage = () => {
                             variant="body1"
                             sx={{ mb: 4, maxWidth: "800px", mx: "auto" }}
                         >
-                            Understanding these challenges is the first step toward creating a more inclusive society.
-                            By raising awareness, advocating for policy changes, and fostering supportive communities,
-                            we can work together to address the social and cultural challenges faced by LGBTQAI+ individuals in India.
+                            Understanding these challenges is the first step toward creating a
+                            more inclusive society. By raising awareness, advocating for
+                            policy changes, and fostering supportive communities, we can work
+                            together to address the social and cultural challenges faced by
+                            LGBTQAI+ individuals in India.
                         </Typography>
                     </Container>
                 </Box>
+
+                <Card sx={{ mb: 6 }}>
+                    <CardContent>
+                        <CardFooter sx={{ display: "flex", justifyContent: "space-between" }}>
+
+                            <NavigationButton
+                                variant="outlined"
+                                color="primary"
+                                component={RouterLink}
+                                to="/legal"
+                                startIcon={<ArrowBackIcon />}
+                            >
+                                Previous
+                            </NavigationButton>
+
+                            <NavigationButton
+                                variant="contained"
+                                color="primary"
+                                component={RouterLink}
+                                to="/resources"
+                                endIcon={<ArrowForwardIcon />}
+                            >
+                                Next: Resources
+                            </NavigationButton>
+                        </CardFooter>
+                    </CardContent>
+                </Card>
             </Container>
         </motion.div>
     );
-
-    return (
-        <SectionTemplate
-          sectionId="challenges"
-          title="Social Challenges Faced by LGBTQAI+ Community"
-          subtitle="Examining stigma, discrimination, and societal barriers"
-          introduction={challengesData.introduction}
-          subsections={subsections}
-          activeSubsection={activeSubsection}
-          prevLink={{ path: "/legal", label: "Legal Landscape" }}
-          nextLink={{ path: "/progress", label: "Progress & Developments" }}
-          renderCustomSubsections={renderCustomSubsections}
-        >
-          {renderContent()}
-        </SectionTemplate>
-      );
 };
 
 export default ChallengesPage;

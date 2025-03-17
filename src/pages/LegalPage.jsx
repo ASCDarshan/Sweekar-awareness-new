@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Box,
     Grid,
@@ -36,10 +36,12 @@ import EventIcon from "@mui/icons-material/Event";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import { Link as RouterLink } from "react-router-dom";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import SectionHeader from "../components/ui/SectionHeader";
 import { legalData } from "../data/legalData";
 import { Timeline, TimelineConnector, TimelineContent, TimelineDot, TimelineItem, TimelineOppositeContent, TimelineSeparator } from "@mui/lab";
+import { useProgress } from "../contexts/ProgressContext";
 
 const GradientCard = styled(Card)(({ theme }) => ({
     position: "relative",
@@ -118,6 +120,7 @@ const MobileTimelineItem = styled(Box)(({ theme }) => ({
 
 const LegalPage = () => {
     const theme = useTheme();
+    const { markPageAsVisited } = useProgress();
     const [expandedCase, setExpandedCase] = useState(null);
     const [expandedChallenges, setExpandedChallenges] = useState({});
     const [currentTab, setCurrentTab] = useState(0);
@@ -127,6 +130,10 @@ const LegalPage = () => {
     const handleExpandCase = (id) => {
         setExpandedCase(expandedCase === id ? null : id);
     };
+
+    useEffect(() => {
+        markPageAsVisited("/legal");
+    }, []);
 
     const handleExpandChallenge = (issue) => {
         setExpandedChallenges((prev) => ({
@@ -141,11 +148,11 @@ const LegalPage = () => {
 
     const renderTabContent = () => {
         switch (currentTab) {
-            case 0: // Landmark Cases
+            case 0:
                 return renderLandmarkCases();
-            case 1: // Current Challenges
+            case 1:
                 return renderCurrentChallenges();
-            case 2: // Transgender Rights
+            case 2:
                 return renderTransgenderRights();
             default:
                 return renderLandmarkCases();
@@ -158,30 +165,30 @@ const LegalPage = () => {
                 <Box sx={{ mt: 4 }}>
                     {legalData.landmark_cases.map((caseData, index) => (
                         <MobileTimelineItem key={caseData.id}>
-                            <Typography 
-                                variant="caption" 
+                            <Typography
+                                variant="caption"
                                 color="text.secondary"
                                 sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
                             >
                                 <EventIcon fontSize="small" sx={{ mr: 0.5 }} />
                                 {caseData.title.split("(")[1]}
                             </Typography>
-                            
+
                             <Typography variant="h6" gutterBottom>
                                 {caseData.title.split("(")[0]}
                             </Typography>
-                            
+
                             <Typography variant="body2" paragraph>
                                 {caseData.description}
                             </Typography>
-                            
+
                             <Chip
                                 size="small"
                                 label="Significance"
                                 color="primary"
                                 sx={{ mb: 1 }}
                             />
-                            
+
                             <Typography
                                 variant="body2"
                                 color="text.secondary"
@@ -189,12 +196,12 @@ const LegalPage = () => {
                             >
                                 {caseData.significance}
                             </Typography>
-                            
-                            <Button 
+
+                            <Button
                                 size="small"
                                 variant="outlined"
                                 onClick={() => handleExpandCase(caseData.id)}
-                                endIcon={expandedCase === caseData.id ? 
+                                endIcon={expandedCase === caseData.id ?
                                     <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                                 sx={{ mt: 1 }}
                             >
@@ -297,7 +304,7 @@ const LegalPage = () => {
                                             <Button
                                                 size="small"
                                                 onClick={() => handleExpandCase(caseData.id)}
-                                                endIcon={expandedCase === caseData.id ? 
+                                                endIcon={expandedCase === caseData.id ?
                                                     <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                                             >
                                                 {expandedCase === caseData.id ? "Show Less" : "Show More"}
@@ -357,10 +364,10 @@ const LegalPage = () => {
                         >
                             <ChallengeCard>
                                 <CardContent>
-                                    <Box sx={{ 
-                                        display: 'flex', 
+                                    <Box sx={{
+                                        display: 'flex',
                                         flexDirection: isMobile ? 'column' : 'row',
-                                        justifyContent: 'space-between', 
+                                        justifyContent: 'space-between',
                                         alignItems: isMobile ? 'flex-start' : 'center',
                                         gap: 1
                                     }}>
@@ -387,7 +394,7 @@ const LegalPage = () => {
                                             size="small"
                                             variant="outlined"
                                             onClick={() => handleExpandChallenge(challenge.issue)}
-                                            endIcon={expandedChallenges[challenge.issue] ? 
+                                            endIcon={expandedChallenges[challenge.issue] ?
                                                 <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                                         >
                                             {expandedChallenges[challenge.issue] ? "Show Less" : "Show More"}
@@ -524,8 +531,8 @@ const LegalPage = () => {
                         allowScrollButtonsMobile
                         indicatorColor="primary"
                         textColor="primary"
-                        sx={{ 
-                            borderBottom: 1, 
+                        sx={{
+                            borderBottom: 1,
                             borderColor: 'divider',
                             backgroundColor: 'background.paper',
                         }}
@@ -567,40 +574,34 @@ const LegalPage = () => {
                 </Box>
 
                 <Card sx={{ mb: 6 }}>
-    <CardContent>
-        <CardFooter>
-            <NavigationButton
-                variant="contained"
-                color="primary"
-                component={RouterLink}
-                to="/challenges"
-                endIcon={<ArrowForwardIcon />}
-            >
-                Next: Social Challenges
-            </NavigationButton>
-        </CardFooter>
-    </CardContent>
-</Card>
+                    <CardContent>
+                        <CardFooter sx={{ display: "flex", justifyContent: "space-between" }}>
+
+                            <NavigationButton
+                                variant="outlined"
+                                color="primary"
+                                component={RouterLink}
+                                to="/identities"
+                                startIcon={<ArrowBackIcon />}
+                            >
+                                Previous
+                            </NavigationButton>
+
+                            <NavigationButton
+                                variant="contained"
+                                color="primary"
+                                component={RouterLink}
+                                to="/challenges"
+                                endIcon={<ArrowForwardIcon />}
+                            >
+                                Next: Challenges
+                            </NavigationButton>
+                        </CardFooter>
+                    </CardContent>
+                </Card>
             </Container>
         </motion.div>
     );
-
-
-    return (
-        <SectionTemplate
-          sectionId="legal"
-          title="Legal Landscape of LGBTQAI+ Rights in India"
-          subtitle="Understanding the laws, landmark cases, and ongoing legal challenges"
-          introduction={legalData.introduction}
-          subsections={subsections}
-          activeSubsection={activeSubsection}
-          prevLink={{ path: "/identities", label: "Identities & Terminologies" }}
-          nextLink={{ path: "/challenges", label: "Social Challenges" }}
-          renderCustomSubsections={renderCustomSubsections}
-        >
-          {renderContent()}
-        </SectionTemplate>
-      );
 };
 
 export default LegalPage;

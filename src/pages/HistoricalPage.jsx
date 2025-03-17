@@ -1,21 +1,21 @@
 // In your HistoricalPage.jsx
-import React from "react";
-import { Typography, Box, Card, CardContent, Button, useTheme, useMediaQuery } from "@mui/material";
+import React, { useEffect } from "react";
 import {
-  Timeline,
-  TimelineItem,
-  TimelineSeparator,
-  TimelineConnector,
-  TimelineContent,
-  TimelineDot,
-  TimelineOppositeContent,
-} from "@mui/lab";
+  Typography,
+  Box,
+  Card,
+  CardContent,
+  Button,
+  useTheme,
+} from "@mui/material";
+
 import { useParams, Navigate, Link as RouterLink } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import SectionTemplate from "../components/sections/SectionTemplate";
 import { historicalData } from "../data";
-import InteractiveTimeline from "../components/tutorial/InteractiveTimeline"; // Import the new timeline component
+import InteractiveTimeline from "../components/tutorial/InteractiveTimeline";
+import { useProgress } from "../contexts/ProgressContext";
 
 const TimelinePaper = styled(Card)(({ theme }) => ({
   padding: theme.spacing(3),
@@ -24,82 +24,62 @@ const TimelinePaper = styled(Card)(({ theme }) => ({
 }));
 
 const PeriodCard = styled(Card)(({ theme, sectionId }) => {
-  // Custom soft background colors for different sections
   const colorMap = {
-    "ancient": `${theme.palette.info.light}15`,
-    "colonial": `${theme.palette.warning.light}15`, 
-    "activism": `${theme.palette.success.light}15`,
-    "timeline": `${theme.palette.secondary.light}15`,
+    ancient: `${theme.palette.info.light}15`,
+    colonial: `${theme.palette.warning.light}15`,
+    activism: `${theme.palette.success.light}15`,
+    timeline: `${theme.palette.secondary.light}15`,
   };
-  
+
   return {
     marginBottom: theme.spacing(4),
     overflow: "visible",
-    background: `linear-gradient(to bottom, ${colorMap[sectionId] || theme.palette.primary.light}20, ${theme.palette.background.paper})`,
+    background: `linear-gradient(to bottom, ${colorMap[sectionId] || theme.palette.primary.light
+      }20, ${theme.palette.background.paper})`,
   };
 });
 
 const PeriodHeader = styled(Box)(({ theme, sectionId }) => {
-  // Custom header colors for different sections
   const colorMap = {
-    "ancient": theme.palette.info.main,
-    "colonial": theme.palette.warning.main,
-    "activism": theme.palette.success.main,
-    "timeline": theme.palette.secondary.main,
+    ancient: theme.palette.info.main,
+    colonial: theme.palette.warning.main,
+    activism: theme.palette.success.main,
+    timeline: theme.palette.secondary.main,
   };
-  
+
   return {
     padding: theme.spacing(2),
-    background: colorMap[sectionId] || theme.palette.gradients?.primary || theme.palette.primary.main,
+    background:
+      colorMap[sectionId] ||
+      theme.palette.gradients?.primary ||
+      theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
     borderTopLeftRadius: theme.shape.borderRadius,
     borderTopRightRadius: theme.shape.borderRadius,
   };
 });
 
-// New styled component for the active subsection
 const ActiveSubsection = styled(Box)(({ theme, isActive }) => ({
   padding: theme.spacing(1.5),
   borderRadius: theme.shape.borderRadius,
-  transition: 'background-color 0.3s ease',
-  backgroundColor: isActive ? theme.palette.primary.light : 'transparent',
-  '&:hover': {
-    backgroundColor: isActive 
-      ? theme.palette.primary.light 
+  transition: "background-color 0.3s ease",
+  backgroundColor: isActive ? theme.palette.primary.light : "transparent",
+  "&:hover": {
+    backgroundColor: isActive
+      ? theme.palette.primary.light
       : theme.palette.action.hover,
   },
   marginBottom: theme.spacing(1),
 }));
 
-// Mobile-friendly timeline item
-const MobileTimelineItem = styled(Box)(({ theme }) => ({
-  position: "relative",
-  padding: theme.spacing(2, 2, 2, 4),
-  marginBottom: theme.spacing(3),
-  marginLeft: theme.spacing(3),
-  borderLeft: `2px solid ${theme.palette.primary.main}`,
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    left: -8,
-    top: 24,
-    width: 16,
-    height: 16,
-    borderRadius: '50%',
-    backgroundColor: theme.palette.primary.main,
-  },
-}));
-
-// Navigation button at the bottom of each card
 const NavigationButton = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(3),
-  alignSelf: 'flex-end',
+  alignSelf: "flex-end",
 }));
 
-// Card footer with navigation
 const CardFooter = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'flex-end',
+  display: "flex",
+  justifyContent: "flex-end",
   paddingTop: theme.spacing(2),
   borderTop: `1px solid ${theme.palette.divider}`,
   marginTop: theme.spacing(3),
@@ -133,9 +113,13 @@ const subsections = [
 ];
 
 const HistoricalPage = () => {
-  const { subsectionId } = useParams();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { subsectionId } = useParams();
+  const { markPageAsVisited } = useProgress();
+
+  useEffect(() => {
+    markPageAsVisited("/identities");
+  }, []);
 
   if (!subsectionId) {
     return <Navigate to="/history/ancient" />;
@@ -145,38 +129,36 @@ const HistoricalPage = () => {
     (period) => period.id === subsectionId
   );
 
-  // Find the next section for navigation
   const getNextSection = () => {
     const currentIndex = subsections.findIndex(
       (subsection) => subsection.id === subsectionId
     );
-    
+
     if (currentIndex < subsections.length - 1) {
       return subsections[currentIndex + 1];
     }
-    
-    // If we're at the last section, return the next overall section link
+
     return { path: "/identities", title: "Identities & Terminologies" };
   };
 
   const nextSection = getNextSection();
 
-  // Custom subsections renderer with active highlighting
   const renderSubsections = () => {
     return subsections.map((subsection) => (
-      <ActiveSubsection 
-        key={subsection.id} 
+      <ActiveSubsection
+        key={subsection.id}
         isActive={subsection.id === subsectionId}
         component={RouterLink}
         to={subsection.path}
-        sx={{ display: 'block', textDecoration: 'none' }}
+        sx={{ display: "block", textDecoration: "none" }}
       >
-        <Typography 
-          variant="subtitle1" 
+        <Typography
+          variant="subtitle1"
           component="div"
-          sx={{ 
-            fontWeight: subsection.id === subsectionId ? 'bold' : 'normal',
-            color: subsection.id === subsectionId ? 'primary.dark' : 'text.primary',
+          sx={{
+            fontWeight: subsection.id === subsectionId ? "bold" : "normal",
+            color:
+              subsection.id === subsectionId ? "primary.dark" : "text.primary",
           }}
         >
           {subsection.title}
@@ -195,12 +177,11 @@ const HistoricalPage = () => {
           <Typography variant="h5" gutterBottom>
             LGBTQAI+ Rights Timeline in India
           </Typography>
-          
-          {/* Replace with Interactive Timeline */}
+
           <Box sx={{ my: 4 }}>
             <InteractiveTimeline events={historicalData.timeline} />
           </Box>
-          
+
           <CardFooter>
             <NavigationButton
               variant="contained"
@@ -232,14 +213,17 @@ const HistoricalPage = () => {
             </Typography>
 
             {activePeriod.keyPoints.map((point, index) => (
-              <Box 
-                key={index} 
-                sx={{ 
-                  mb: 2, 
+              <Box
+                key={index}
+                sx={{
+                  mb: 2,
                   p: 2,
                   borderRadius: 1,
                   borderLeft: `4px solid ${theme.palette.primary.main}`,
-                  bgcolor: `rgba(${theme.palette.primary.main.replace(/[^\d,]/g, '')}, 0.05)`,
+                  bgcolor: `rgba(${theme.palette.primary.main.replace(
+                    /[^\d,]/g,
+                    ""
+                  )}, 0.05)`,
                 }}
               >
                 <Typography variant="body1">{point.text}</Typography>
@@ -248,7 +232,7 @@ const HistoricalPage = () => {
                 </Typography>
               </Box>
             ))}
-            
+
             <CardFooter>
               <NavigationButton
                 variant="contained"
@@ -270,7 +254,7 @@ const HistoricalPage = () => {
         <Typography variant="h5" color="error">
           Content for this section is not available.
         </Typography>
-        
+
         <CardFooter>
           <NavigationButton
             variant="contained"
@@ -296,7 +280,7 @@ const HistoricalPage = () => {
       activeSubsection={subsectionId}
       prevLink={{ path: "/introduction", label: "Introduction" }}
       nextLink={{ path: "/identities", label: "Identities & Terminologies" }}
-      renderCustomSubsections={renderSubsections} // Pass the custom renderer
+      renderCustomSubsections={renderSubsections}
     >
       {renderContent()}
     </SectionTemplate>
