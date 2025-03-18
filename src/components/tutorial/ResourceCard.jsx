@@ -1,60 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
-  Card, CardContent, Typography, Box,
-  Chip, Collapse, IconButton, Link,
-  Divider, Button,
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
-import EmailIcon from '@mui/icons-material/Email';
-import LanguageIcon from '@mui/icons-material/Language';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  Chip,
+  Collapse,
+  IconButton,
+  Link,
+  Divider,
+  Button,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+import EmailIcon from "@mui/icons-material/Email";
+import LanguageIcon from "@mui/icons-material/Language";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 const ResourceCardContainer = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(3),
   borderRadius: theme.shape.borderRadius,
-  overflow: 'visible',
-  transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-  '&:hover': {
-    transform: 'translateY(-5px)',
+  overflow: "visible",
+  transition: "transform 0.2s ease, box-shadow 0.2s ease",
+  "&:hover": {
+    transform: "translateY(-5px)",
     boxShadow: theme.shadows[3],
   },
 }));
 
 const CardHeader = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2, 3),
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
 }));
 
 const ServiceChip = styled(Chip)(({ theme }) => ({
   margin: theme.spacing(0.5),
   backgroundColor: theme.palette.background.card,
-  '&:hover': {
+  "&:hover": {
     backgroundColor: theme.palette.primary.light,
     color: theme.palette.primary.contrastText,
   },
 }));
 
 const ExpandButton = styled(IconButton)(({ expanded }) => ({
-  transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-  transition: 'transform 0.2s',
+  transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
+  transition: "transform 0.2s",
 }));
 
 const ContactItem = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
+  display: "flex",
+  alignItems: "center",
   marginBottom: theme.spacing(1),
-  '& svg': {
+  "& svg": {
     marginRight: theme.spacing(1),
     color: theme.palette.primary.main,
   },
 }));
 
-const ResourceCard = ({ resource, type = 'organization' }) => {
+const ResourceCard = ({ resource, type = "organization" }) => {
   const [expanded, setExpanded] = useState(false);
 
   const handleExpandClick = () => {
@@ -70,7 +77,10 @@ const ResourceCard = ({ resource, type = 'organization' }) => {
           </Typography>
           {resource.location && (
             <Typography variant="body2" color="text.secondary">
-              <LocationOnIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 0.5 }} />
+              <LocationOnIcon
+                fontSize="small"
+                sx={{ verticalAlign: "middle", mr: 0.5 }}
+              />
               {resource.location}
             </Typography>
           )}
@@ -92,7 +102,7 @@ const ResourceCard = ({ resource, type = 'organization' }) => {
           {resource.description}
         </Typography>
 
-        {type === 'organization' && resource.services && (
+        {type === "organization" && resource.services && (
           <Box sx={{ mb: 2 }}>
             <Typography variant="subtitle2" gutterBottom>
               Services:
@@ -105,12 +115,10 @@ const ResourceCard = ({ resource, type = 'organization' }) => {
           </Box>
         )}
 
-        {type === 'helpline' && resource.hours && (
+        {type === "helpline" && resource.hours && (
           <ContactItem>
             <AccessTimeIcon fontSize="small" />
-            <Typography variant="body2">
-              {resource.hours}
-            </Typography>
+            <Typography variant="body2">{resource.hours}</Typography>
           </ContactItem>
         )}
 
@@ -137,7 +145,10 @@ const ResourceCard = ({ resource, type = 'organization' }) => {
                   <ContactItem>
                     <EmailIcon fontSize="small" />
                     <Typography variant="body2">
-                      <Link href={`mailto:${resource.contact.email}`} color="inherit">
+                      <Link
+                        href={`mailto:${resource.contact.email}`}
+                        color="inherit"
+                      >
                         {resource.contact.email}
                       </Link>
                     </Typography>
@@ -160,16 +171,14 @@ const ResourceCard = ({ resource, type = 'organization' }) => {
                   </ContactItem>
                 )}
 
-                {type === 'helpline' && resource.contact && (
+                {type === "helpline" && resource.contact && (
                   <ContactItem>
                     <LocalPhoneIcon fontSize="small" />
-                    <Typography variant="body2">
-                      {resource.contact}
-                    </Typography>
+                    <Typography variant="body2">{resource.contact}</Typography>
                   </ContactItem>
                 )}
 
-                {type === 'online' && resource.website && (
+                {type === "online" && resource.website && (
                   <Button
                     variant="outlined"
                     color="primary"

@@ -1,21 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
-  Box, Typography, Card, CardContent, Grid,
-  Divider, Button, Avatar, CircularProgress,
-  useTheme, IconButton, Dialog, DialogTitle,
-  DialogContent, DialogActions
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import { Link as RouterLink } from 'react-router-dom';
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  Grid,
+  Divider,
+  Button,
+  Avatar,
+  CircularProgress,
+  useTheme,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import { Link as RouterLink } from "react-router-dom";
 
-import ProgressIndicator from '../ui/ProgressIndicator';
-import { useProgress } from '../../contexts/ProgressContext';
+import ProgressIndicator from "../ui/ProgressIndicator";
+import { useProgress } from "../../contexts/ProgressContext";
 
 const ProfileCard = styled(Card)(({ theme }) => ({
-  overflow: 'visible',
-  position: 'relative',
+  overflow: "visible",
+  position: "relative",
   borderRadius: theme.shape.borderRadius,
   boxShadow: theme.shadows[1],
 }));
@@ -26,7 +37,7 @@ const ProfileHeader = styled(Box)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
   borderTopLeftRadius: theme.shape.borderRadius,
   borderTopRightRadius: theme.shape.borderRadius,
-  position: 'relative',
+  position: "relative",
 }));
 
 const ProfileAvatar = styled(Avatar)(({ theme }) => ({
@@ -34,113 +45,111 @@ const ProfileAvatar = styled(Avatar)(({ theme }) => ({
   height: 100,
   border: `4px solid ${theme.palette.background.paper}`,
   boxShadow: theme.shadows[2],
-  position: 'absolute',
+  position: "absolute",
   bottom: -50,
   left: 30,
   backgroundColor: theme.palette.background.default,
 }));
 
 const ProgressContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
   marginBottom: theme.spacing(2),
 }));
 
 const ResetButton = styled(IconButton)(({ theme }) => ({
-  position: 'absolute',
+  position: "absolute",
   top: 10,
   right: 10,
   color: theme.palette.primary.contrastText,
-  '&:hover': {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  "&:hover": {
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
   },
 }));
 
 const BadgeContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexWrap: 'wrap',
+  display: "flex",
+  flexWrap: "wrap",
   gap: theme.spacing(2),
-  justifyContent: 'center',
+  justifyContent: "center",
   margin: theme.spacing(2, 0),
 }));
 
 const Badge = styled(Box)(({ theme, unlocked }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
   padding: theme.spacing(1),
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: unlocked ? theme.palette.background.card : theme.palette.background.default,
-  boxShadow: unlocked ? theme.shadows[1] : 'none',
+  backgroundColor: unlocked
+    ? theme.palette.background.card
+    : theme.palette.background.default,
+  boxShadow: unlocked ? theme.shadows[1] : "none",
   opacity: unlocked ? 1 : 0.6,
-  transition: 'all 0.2s ease',
+  transition: "all 0.2s ease",
 }));
 
 const BadgeIcon = styled(Box)(({ theme, unlocked }) => ({
   width: 50,
   height: 50,
-  borderRadius: '50%',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  backgroundColor: unlocked ? theme.palette.secondary.main : theme.palette.background.card,
+  borderRadius: "50%",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  backgroundColor: unlocked
+    ? theme.palette.secondary.main
+    : theme.palette.background.card,
   marginBottom: theme.spacing(1),
 }));
 
 const badges = [
   {
-    id: 'started',
-    name: 'First Steps',
-    description: 'Started the learning journey',
-    icon: '🚀',
-    threshold: 0
+    id: "started",
+    name: "First Steps",
+    description: "Started the learning journey",
+    icon: "🚀",
+    threshold: 0,
   },
   {
-    id: 'basics',
-    name: 'Basics Mastered',
-    description: 'Completed the introduction and history sections',
-    icon: '📚',
-    threshold: 25
+    id: "basics",
+    name: "Basics Mastered",
+    description: "Completed the introduction and history sections",
+    icon: "📚",
+    threshold: 25,
   },
   {
-    id: 'halfway',
-    name: 'Halfway There',
-    description: 'Completed 50% of the tutorial',
-    icon: '🏃',
-    threshold: 50
+    id: "halfway",
+    name: "Halfway There",
+    description: "Completed 50% of the tutorial",
+    icon: "🏃",
+    threshold: 50,
   },
   {
-    id: 'explorer',
-    name: 'LGBTQAI+ Explorer',
-    description: 'Completed 75% of the tutorial',
-    icon: '🔍',
-    threshold: 75
+    id: "explorer",
+    name: "LGBTQAI+ Explorer",
+    description: "Completed 75% of the tutorial",
+    icon: "🔍",
+    threshold: 75,
   },
   {
-    id: 'champion',
-    name: 'Ally Champion',
-    description: 'Completed the entire tutorial',
-    icon: '🏆',
-    threshold: 100
+    id: "champion",
+    name: "Ally Champion",
+    description: "Completed the entire tutorial",
+    icon: "🏆",
+    threshold: 100,
   },
 ];
 
 const ProfileCompletion = () => {
   const theme = useTheme();
-  const {
-    sections,
-    getOverallProgress,
-    getSectionCompletion,
-    resetProgress
-  } = useProgress();
+  const { sections, getOverallProgress, getSectionCompletion, resetProgress } =
+    useProgress();
 
   const [openDialog, setOpenDialog] = useState(false);
 
   const overallProgress = getOverallProgress();
-
-
 
   const handleOpenDialog = () => {
     setOpenDialog(true);
@@ -161,9 +170,14 @@ const ProfileCompletion = () => {
         <ProfileHeader>
           <Typography variant="h5">Your Learning Progress</Typography>
           <Typography variant="body2">
-            Track your educational journey through the LGBTQAI+ awareness tutorial
+            Track your educational journey through the LGBTQAI+ awareness
+            tutorial
           </Typography>
-          <ResetButton onClick={handleOpenDialog} size="small" title="Reset Progress">
+          <ResetButton
+            onClick={handleOpenDialog}
+            size="small"
+            title="Reset Progress"
+          >
             <RestartAltIcon fontSize="small" />
           </ResetButton>
           <ProfileAvatar>
@@ -177,7 +191,9 @@ const ProfileCompletion = () => {
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
               <ProgressContainer>
-                <Box sx={{ position: 'relative', display: 'inline-flex', mb: 2 }}>
+                <Box
+                  sx={{ position: "relative", display: "inline-flex", mb: 2 }}
+                >
                   <CircularProgress
                     variant="determinate"
                     value={overallProgress}
@@ -185,8 +201,8 @@ const ProfileCompletion = () => {
                     thickness={4}
                     sx={{
                       color: theme.palette.primary.main,
-                      '& .MuiCircularProgress-circle': {
-                        strokeLinecap: 'round',
+                      "& .MuiCircularProgress-circle": {
+                        strokeLinecap: "round",
                       },
                     }}
                   />
@@ -196,10 +212,10 @@ const ProfileCompletion = () => {
                       left: 0,
                       bottom: 0,
                       right: 0,
-                      position: 'absolute',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
+                      position: "absolute",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
                     }}
                   >
                     <EmojiEventsIcon
@@ -212,15 +228,20 @@ const ProfileCompletion = () => {
                 <Typography variant="h6">Overall Progress</Typography>
                 <Typography variant="body2" color="text.secondary">
                   {overallProgress >= 100
-                    ? 'Congratulations on completing the tutorial!'
+                    ? "Congratulations on completing the tutorial!"
                     : `${Math.floor(overallProgress)}% Complete`}
                 </Typography>
               </ProgressContainer>
 
               <BadgeContainer>
                 {badges.map((badge) => (
-                  <Badge key={badge.id} unlocked={overallProgress >= badge.threshold ? 1 : 0}>
-                    <BadgeIcon unlocked={overallProgress >= badge.threshold ? 1 : 0}>
+                  <Badge
+                    key={badge.id}
+                    unlocked={overallProgress >= badge.threshold ? 1 : 0}
+                  >
+                    <BadgeIcon
+                      unlocked={overallProgress >= badge.threshold ? 1 : 0}
+                    >
                       <Typography variant="h5" component="span">
                         {badge.icon}
                       </Typography>
@@ -228,7 +249,11 @@ const ProfileCompletion = () => {
                     <Typography variant="subtitle2" align="center">
                       {badge.name}
                     </Typography>
-                    <Typography variant="caption" color="text.secondary" align="center">
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      align="center"
+                    >
                       {badge.threshold}%
                     </Typography>
                   </Badge>
@@ -251,7 +276,7 @@ const ProfileCompletion = () => {
 
               <Divider sx={{ my: 2 }} />
 
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                 <Button
                   component={RouterLink}
                   to="/"
@@ -263,11 +288,13 @@ const ProfileCompletion = () => {
                 </Button>
                 <Button
                   component={RouterLink}
-                  to={overallProgress < 100 ? '/introduction' : '/glossary'}
+                  to={overallProgress < 100 ? "/introduction" : "/glossary"}
                   variant="contained"
                   color="primary"
                 >
-                  {overallProgress < 100 ? 'Continue Learning' : 'Explore Glossary'}
+                  {overallProgress < 100
+                    ? "Continue Learning"
+                    : "Explore Glossary"}
                 </Button>
               </Box>
             </Grid>
@@ -279,12 +306,15 @@ const ProfileCompletion = () => {
         <DialogTitle>Reset Progress?</DialogTitle>
         <DialogContent>
           <Typography variant="body1">
-            Are you sure you want to reset your progress? This action cannot be undone.
+            Are you sure you want to reset your progress? This action cannot be
+            undone.
           </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={handleReset} color="error">Reset</Button>
+          <Button onClick={handleReset} color="error">
+            Reset
+          </Button>
         </DialogActions>
       </Dialog>
     </>

@@ -9,9 +9,9 @@ import { historicalQuiz } from "../data/quizzes/historicalQuiz";
 import { identitiesQuiz } from "../data/quizzes/historicalQuiz";
 
 const StyledTab = styled(Tab)(({ theme, active }) => ({
-  fontWeight: active ? 'bold' : 'normal',
-  color: active ? theme.palette.primary.main : 'inherit',
-  borderBottom: active ? `2px solid ${theme.palette.primary.main}` : 'none',
+  fontWeight: active ? "bold" : "normal",
+  color: active ? theme.palette.primary.main : "inherit",
+  borderBottom: active ? `2px solid ${theme.palette.primary.main}` : "none",
 }));
 
 const quizzes = {
@@ -35,7 +35,8 @@ const subsections = [
 ];
 
 const QuizPage = () => {
-  const { markAsCompleted, markPageAsVisited, getSectionCompletion } = useProgress();
+  const { markAsCompleted, markPageAsVisited, getSectionCompletion } =
+    useProgress();
 
   const [activeTab, setActiveTab] = useState("historical");
   const [quizCompleted, setQuizCompleted] = useState(false);
@@ -46,9 +47,10 @@ const QuizPage = () => {
     markPageAsVisited("/quiz");
 
     const initialCompletedSections = {};
-    subsections.forEach(section => {
+    subsections.forEach((section) => {
       if (quizzes[section.id]) {
-        initialCompletedSections[section.id] = getSectionCompletion(section.id) > 0;
+        initialCompletedSections[section.id] =
+          getSectionCompletion(section.id) > 0;
       }
     });
     setCompletedSections(initialCompletedSections);
@@ -59,24 +61,29 @@ const QuizPage = () => {
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
     setQuizCompleted(completedSections[newValue] || false);
-    setQuizKey(prevKey => prevKey + 1);
+    setQuizKey((prevKey) => prevKey + 1);
   };
 
   const handleQuizComplete = () => {
     markAsCompleted(activeTab, "quiz");
     setQuizCompleted(true);
 
-    setCompletedSections(prev => ({
+    setCompletedSections((prev) => ({
       ...prev,
-      [activeTab]: true
+      [activeTab]: true,
     }));
   };
 
   const handleNextSection = () => {
-    const currentIndex = subsections.findIndex(section => section.id === activeTab);
+    const currentIndex = subsections.findIndex(
+      (section) => section.id === activeTab
+    );
 
     let nextIndex = currentIndex + 1;
-    while (nextIndex < subsections.length && !quizzes[subsections[nextIndex].id]) {
+    while (
+      nextIndex < subsections.length &&
+      !quizzes[subsections[nextIndex].id]
+    ) {
       nextIndex++;
     }
 
@@ -84,15 +91,21 @@ const QuizPage = () => {
       const nextSectionId = subsections[nextIndex].id;
       setActiveTab(nextSectionId);
       setQuizCompleted(completedSections[nextSectionId] || false);
-      setQuizKey(prevKey => prevKey + 1);
+      setQuizKey((prevKey) => prevKey + 1);
     }
   };
 
-  const availableSections = subsections.filter(section => quizzes[section.id]).length;
-  const completedCount = Object.values(completedSections).filter(Boolean).length;
-  const progressPercentage = availableSections > 0 ? (completedCount / availableSections) * 100 : 0;
+  const availableSections = subsections.filter(
+    (section) => quizzes[section.id]
+  ).length;
+  const completedCount =
+    Object.values(completedSections).filter(Boolean).length;
+  const progressPercentage =
+    availableSections > 0 ? (completedCount / availableSections) * 100 : 0;
 
-  const currentIndex = subsections.findIndex(section => section.id === activeTab);
+  const currentIndex = subsections.findIndex(
+    (section) => section.id === activeTab
+  );
   let nextSectionLabel = "Next Section";
 
   for (let i = currentIndex + 1; i < subsections.length; i++) {
@@ -116,7 +129,7 @@ const QuizPage = () => {
       activeSubsection="quiz"
       progress={progressPercentage}
       renderCustomSubsections={() => (
-        <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 2 }}>
           <Tabs
             value={activeTab}
             onChange={handleTabChange}
@@ -149,14 +162,18 @@ const QuizPage = () => {
           />
 
           {quizCompleted && (
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 4 }}>
+            <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 4 }}>
               <Button
                 variant="contained"
                 color="primary"
                 endIcon={<ArrowForwardIcon />}
                 onClick={handleNextSection}
-                disabled={currentIndex === subsections.length - 1 ||
-                  !subsections.slice(currentIndex + 1).some(s => quizzes[s.id])}
+                disabled={
+                  currentIndex === subsections.length - 1 ||
+                  !subsections
+                    .slice(currentIndex + 1)
+                    .some((s) => quizzes[s.id])
+                }
               >
                 {nextSectionLabel}
               </Button>
@@ -164,7 +181,7 @@ const QuizPage = () => {
           )}
         </>
       ) : (
-        <Box sx={{ p: 3, textAlign: 'center' }}>
+        <Box sx={{ p: 3, textAlign: "center" }}>
           <Typography variant="h6">
             This quiz section is coming soon!
           </Typography>

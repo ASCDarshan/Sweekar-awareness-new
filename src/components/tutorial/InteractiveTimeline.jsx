@@ -1,21 +1,28 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import {
-  Box, Typography, Card, CardContent, IconButton,
-  useTheme, useMediaQuery, Button, Tooltip
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { motion, AnimatePresence } from 'framer-motion';
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  IconButton,
+  useTheme,
+  useMediaQuery,
+  Button,
+  Tooltip,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { motion, AnimatePresence } from "framer-motion";
 
 const TimelineContainer = styled(Box)(({ theme }) => ({
-  position: 'relative',
+  position: "relative",
   padding: theme.spacing(2, 0),
   marginBottom: theme.spacing(4),
 }));
 
 const TimelineTrack = styled(Box)(({ theme }) => ({
-  position: 'relative',
+  position: "relative",
   height: 4,
   backgroundColor: theme.palette.background.card,
   borderRadius: 2,
@@ -23,40 +30,43 @@ const TimelineTrack = styled(Box)(({ theme }) => ({
 }));
 
 const TimelineMarker = styled(Box)(({ theme, active }) => ({
-  position: 'absolute',
+  position: "absolute",
   width: 16,
   height: 16,
-  borderRadius: '50%',
-  backgroundColor: active ? theme.palette.primary.main : theme.palette.background.paper,
-  border: `2px solid ${active ? theme.palette.primary.main : theme.palette.text.secondary}`,
-  top: '50%',
-  transform: 'translate(-50%, -50%)',
-  cursor: 'pointer',
-  transition: 'all 0.2s ease',
+  borderRadius: "50%",
+  backgroundColor: active
+    ? theme.palette.primary.main
+    : theme.palette.background.paper,
+  border: `2px solid ${active ? theme.palette.primary.main : theme.palette.text.secondary
+    }`,
+  top: "50%",
+  transform: "translate(-50%, -50%)",
+  cursor: "pointer",
+  transition: "all 0.2s ease",
   zIndex: 2,
-  '&:hover': {
+  "&:hover": {
     backgroundColor: theme.palette.primary.light,
-    transform: 'translate(-50%, -50%) scale(1.2)',
+    transform: "translate(-50%, -50%) scale(1.2)",
   },
 }));
 
 const YearLabel = styled(Typography)(({ theme, active }) => ({
-  position: 'absolute',
+  position: "absolute",
   bottom: -30,
-  transform: 'translateX(-50%)',
+  transform: "translateX(-50%)",
   color: active ? theme.palette.primary.main : theme.palette.text.secondary,
   fontWeight: active ? 600 : 400,
-  fontSize: active ? '1rem' : '0.875rem',
-  transition: 'all 0.2s ease',
+  fontSize: active ? "1rem" : "0.875rem",
+  transition: "all 0.2s ease",
 }));
 
 const NavigationButton = styled(IconButton)(({ theme }) => ({
-  position: 'absolute',
-  top: '50%',
-  transform: 'translateY(-50%)',
+  position: "absolute",
+  top: "50%",
+  transform: "translateY(-50%)",
   backgroundColor: theme.palette.background.paper,
   boxShadow: theme.shadows[2],
-  '&:hover': {
+  "&:hover": {
     backgroundColor: theme.palette.primary.light,
     color: theme.palette.primary.contrastText,
   },
@@ -66,33 +76,33 @@ const NavigationButton = styled(IconButton)(({ theme }) => ({
 const EventCard = styled(motion(Card))(({ theme }) => ({
   marginBottom: theme.spacing(4),
   maxWidth: 600,
-  margin: '0 auto',
-  overflow: 'visible',
-  position: 'relative',
-  '&:after': {
+  margin: "0 auto",
+  overflow: "visible",
+  position: "relative",
+  "&:after": {
     content: '""',
-    position: 'absolute',
+    position: "absolute",
     bottom: -15,
-    left: '50%',
+    left: "50%",
     marginLeft: -15,
     borderWidth: 15,
-    borderStyle: 'solid',
+    borderStyle: "solid",
     borderColor: `${theme.palette.background.paper} transparent transparent transparent`,
   },
 }));
 
 const CarouselContainer = styled(Box)(({ theme }) => ({
-  position: 'relative',
-  overflow: 'hidden',
+  position: "relative",
+  overflow: "hidden",
   height: 280,
-  [theme.breakpoints.down('md')]: {
+  [theme.breakpoints.down("md")]: {
     height: 320,
   },
 }));
 
 const InteractiveTimeline = ({ events, defaultActiveIndex = 0 }) => {
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
   const [activeIndex, setActiveIndex] = useState(defaultActiveIndex);
   const [visibleMarkers, setVisibleMarkers] = useState([]);
   const containerRef = useRef(null);
@@ -174,19 +184,19 @@ const InteractiveTimeline = ({ events, defaultActiveIndex = 0 }) => {
 
         <Box
           sx={{
-            position: 'absolute',
+            position: "absolute",
             left: 0,
             top: 0,
-            height: '100%',
+            height: "100%",
             width: `${(activeIndex / (events.length - 1)) * 100}%`,
             backgroundColor: theme.palette.primary.main,
             borderRadius: 2,
-            transition: 'width 0.3s ease',
+            transition: "width 0.3s ease",
           }}
         />
 
         {visibleMarkers.map((event, index) => {
-          const eventIndex = events.findIndex(e => e.year === event.year);
+          const eventIndex = events.findIndex((e) => e.year === event.year);
           const position = (index / (visibleMarkers.length - 1)) * 100;
           const isActive = eventIndex === activeIndex;
 
@@ -211,7 +221,7 @@ const InteractiveTimeline = ({ events, defaultActiveIndex = 0 }) => {
         })}
       </TimelineTrack>
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 5 }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mt: 5 }}>
         <Button
           size="small"
           disabled={activeIndex === 0}

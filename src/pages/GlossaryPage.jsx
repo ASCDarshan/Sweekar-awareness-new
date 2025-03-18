@@ -11,9 +11,6 @@ import {
   Chip,
   useTheme,
   Paper,
-  List,
-  ListItem,
-  ListItemText,
   Divider,
   IconButton,
   Button,
@@ -34,7 +31,6 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import CheckIcon from "@mui/icons-material/Check";
 import { glossaryTerms } from "../data/glossaryData";
 import SectionHeader from "../components/ui/SectionHeader";
-import SectionTemplate from "../components/sections/SectionTemplate";
 import { useProgress } from "../contexts/ProgressContext";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -118,7 +114,6 @@ const CardFooter = styled(Box)(({ theme }) => ({
   borderTop: `1px solid ${theme.palette.divider}`,
   marginTop: theme.spacing(3),
 }));
-
 
 const GlossaryPage = () => {
   const theme = useTheme();
@@ -518,8 +513,9 @@ const GlossaryPage = () => {
 
         <Card sx={{ mb: 6 }}>
           <CardContent>
-            <CardFooter sx={{ display: "flex", justifyContent: "space-between" }}>
-
+            <CardFooter
+              sx={{ display: "flex", justifyContent: "space-between" }}
+            >
               <NavigationButton
                 variant="outlined"
                 color="primary"
