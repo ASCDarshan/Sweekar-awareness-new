@@ -30,17 +30,16 @@ import PsychologyIcon from "@mui/icons-material/Psychology";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import SchoolIcon from "@mui/icons-material/School";
-import PeopleIcon from "@mui/icons-material/People";
 import WarningIcon from "@mui/icons-material/Warning";
 import ChurchIcon from "@mui/icons-material/Church";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import SectionHeader from "../components/ui/SectionHeader";
 import { challengesData } from "../data/challengesData";
 import { useProgress } from "../contexts/ProgressContext";
 
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Link as RouterLink } from "react-router-dom";
 
 const GradientCard = styled(Card)(({ theme }) => ({
@@ -124,7 +123,6 @@ const CardFooter = styled(Box)(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
     marginTop: theme.spacing(3),
 }));
-
 
 const ChallengesPage = () => {
     const theme = useTheme();
@@ -490,8 +488,9 @@ const ChallengesPage = () => {
 
                 <Card sx={{ mb: 6 }}>
                     <CardContent>
-                        <CardFooter sx={{ display: "flex", justifyContent: "space-between" }}>
-
+                        <CardFooter
+                            sx={{ display: "flex", justifyContent: "space-between" }}
+                        >
                             <NavigationButton
                                 variant="outlined"
                                 color="primary"

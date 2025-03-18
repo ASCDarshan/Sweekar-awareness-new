@@ -116,7 +116,6 @@ const ResourcesPage = () => {
     marginTop: theme.spacing(3),
   }));
 
-
   const currentResources = getCurrentResources();
 
   return (
@@ -219,7 +218,6 @@ const ResourcesPage = () => {
       <Card sx={{ mb: 6 }}>
         <CardContent>
           <CardFooter sx={{ display: "flex", justifyContent: "space-between" }}>
-
             <NavigationButton
               variant="outlined"
               color="primary"

@@ -1,4 +1,4 @@
-import data from '../data';
+import data from "../data";
 
 /**
  * Get a specific section by ID
@@ -7,29 +7,29 @@ import data from '../data';
  */
 export const getSection = (sectionId) => {
   // Check each data object for the requested section
-  if (data.historicalData && sectionId === 'historical') {
+  if (data.historicalData && sectionId === "historical") {
     return data.historicalData;
   }
-  
-  if (data.identitiesData && sectionId === 'identities') {
+
+  if (data.identitiesData && sectionId === "identities") {
     return data.identitiesData;
   }
-  
-  if (data.legalData && sectionId === 'legal') {
+
+  if (data.legalData && sectionId === "legal") {
     return data.legalData;
   }
-  
-  if (data.challengesData && sectionId === 'challenges') {
+
+  if (data.challengesData && sectionId === "challenges") {
     return data.challengesData;
   }
-  
-  if (data.socialData && sectionId === 'progress') {
+
+  if (data.socialData && sectionId === "progress") {
     return data.socialData.progress;
   }
-  
-  if (data.resourcesData && sectionId === 'resources') {
+
+  if (data.resourcesData && sectionId === "resources") {
     return data.resourcesData;
   }
-  
+
   return null;
-}
+};

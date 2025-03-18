@@ -1,16 +1,20 @@
-import React, { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { useProgress } from '../../contexts/ProgressContext';
+import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { useProgress } from "../../contexts/ProgressContext";
 
 /**
- * 
+ *
  * @param {Object} props
  * @param {string} props.sectionId
- * @param {string} props.subsectionId 
+ * @param {string} props.subsectionId
  * @param {React.ReactNode} props.children
- * @returns {React.ReactNode} 
+ * @returns {React.ReactNode}
  */
-const SectionProgressWrapper = ({ sectionId, subsectionId = 'main', children }) => {
+const SectionProgressWrapper = ({
+  sectionId,
+  subsectionId = "main",
+  children,
+}) => {
   const { markAsCompleted } = useProgress();
   const location = useLocation();
 

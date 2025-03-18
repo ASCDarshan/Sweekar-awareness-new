@@ -9,7 +9,7 @@ import {
   Container,
   useTheme,
 } from "@mui/material";
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 import SectionHeader from "../components/ui/SectionHeader";
 import ProfileCompletion from "../components/tutorial/ProfileCompletion"; // Updated import path
 import { useProgress } from "../contexts/ProgressContext";
@@ -59,9 +59,9 @@ const ProgressPage = () => {
             Learning Path Overview
           </Typography>
           <Typography variant="body1" paragraph>
-            Our tutorial is structured to provide a comprehensive understanding of
-            LGBTQAI+ issues in India. Below is an overview of each section and
-            what you'll learn.
+            Our tutorial is structured to provide a comprehensive understanding
+            of LGBTQAI+ issues in India. Below is an overview of each section
+            and what you'll learn.
           </Typography>
 
           <Grid container spacing={3} sx={{ mt: 2 }}>
@@ -100,20 +100,27 @@ const ProgressPage = () => {
                             px: 1.5,
                             py: 0.5,
                             borderRadius: 10,
-                            bgcolor: getSectionCompletion(section.id) === 100
-                              ? 'tertiary.light'
-                              : 'background.default',
-                            color: getSectionCompletion(section.id) === 100
-                              ? 'tertiary.dark'
-                              : 'text.secondary',
-                            fontSize: '0.875rem',
+                            bgcolor:
+                              getSectionCompletion(section.id) === 100
+                                ? "tertiary.light"
+                                : "background.default",
+                            color:
+                              getSectionCompletion(section.id) === 100
+                                ? "tertiary.dark"
+                                : "text.secondary",
+                            fontSize: "0.875rem",
                             fontWeight: 500,
                           }}
                         >
-                          {Math.round(getSectionCompletion(section.id))}% Complete
+                          {Math.round(getSectionCompletion(section.id))}%
+                          Complete
                         </Box>
                       </Box>
-                      <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mt: 1 }}
+                      >
                         {getSubsectionDescription(section)}
                       </Typography>
                     </CardContent>
@@ -132,7 +139,7 @@ const ProgressPage = () => {
             py: 4,
             px: 3,
             borderRadius: theme.shape.borderRadius,
-            bgcolor: 'background.gradient' || theme.palette.background.default,
+            bgcolor: "background.gradient" || theme.palette.background.default,
           }}
         >
           <Typography variant="h5" gutterBottom>
@@ -140,8 +147,8 @@ const ProgressPage = () => {
           </Typography>
           <Typography variant="body1">
             The more you learn, the better you can understand and support the
-            LGBTQAI+ community. Keep exploring sections to complete your tutorial
-            and earn all badges!
+            LGBTQAI+ community. Keep exploring sections to complete your
+            tutorial and earn all badges!
           </Typography>
         </Box>
       </Container>

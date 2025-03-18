@@ -1,33 +1,32 @@
 import { createTheme } from "@mui/material/styles";
 
-// Custom theme with rainbow-inspired colors
 export const theme = createTheme({
   palette: {
     primary: {
-      main: "#7D3C98", // Purple
+      main: "#7D3C98",
       light: "#A569BD",
       dark: "#5B2C6F",
       contrastText: "#fff",
     },
     secondary: {
-      main: "#F39C12", // Orange
+      main: "#F39C12",
       light: "#F8C471",
       dark: "#D68910",
       contrastText: "#000",
     },
     tertiary: {
-      main: "#2ECC71", // Green
+      main: "#2ECC71",
       light: "#82E0AA",
       dark: "#239B56",
       contrastText: "#000",
     },
     accent1: {
-      main: "#E74C3C", // Red
+      main: "#E74C3C",
       light: "#F1948A",
       dark: "#B03A2E",
     },
     accent2: {
-      main: "#3498DB", // Blue
+      main: "#3498DB",
       light: "#85C1E9",
       dark: "#2874A6",
     },
@@ -172,7 +171,6 @@ export const theme = createTheme({
   },
 });
 
-// Extended theme with custom colors not in the default Material-UI palette
 const extendedTheme = {
   ...theme,
   palette: {

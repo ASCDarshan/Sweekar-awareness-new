@@ -1,13 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
-  Box, Typography, Radio, RadioGroup, FormControlLabel, FormControl,
-  Button, Paper, Stepper, Step, StepLabel, Alert, Card
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { motion, AnimatePresence } from 'framer-motion';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import ErrorIcon from '@mui/icons-material/Error';
-import { useProgress } from '../../contexts/ProgressContext';
+  Box,
+  Typography,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  Button,
+  Paper,
+  Stepper,
+  Step,
+  StepLabel,
+  Alert,
+  Card,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { motion, AnimatePresence } from "framer-motion";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import ErrorIcon from "@mui/icons-material/Error";
+import { useProgress } from "../../contexts/ProgressContext";
 
 const QuizPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -28,38 +39,38 @@ const ResultBox = styled(Box)(({ theme, correct }) => ({
   borderRadius: theme.shape.borderRadius,
   marginTop: theme.spacing(2),
   marginBottom: theme.spacing(2),
-  display: 'flex',
-  alignItems: 'center',
+  display: "flex",
+  alignItems: "center",
   backgroundColor: correct
     ? theme.palette.tertiary.light
     : theme.palette.accent1.light,
-  color: correct
-    ? theme.palette.tertiary.dark
-    : theme.palette.accent1.dark,
+  color: correct ? theme.palette.tertiary.dark : theme.palette.accent1.dark,
 }));
 
-const Option = styled(FormControlLabel)(({ theme, isSelected, isCorrect, isWrong }) => ({
-  width: '100%',
-  margin: 0,
-  padding: theme.spacing(1.5),
-  borderRadius: theme.shape.borderRadius,
-  transition: 'all 0.2s ease',
-  marginBottom: theme.spacing(1),
-  ...(isSelected && {
-    backgroundColor: theme.palette.primary.light + '30',
-  }),
-  ...(isCorrect && {
-    backgroundColor: theme.palette.tertiary.light + '40',
-    border: `1px solid ${theme.palette.tertiary.main}`,
-  }),
-  ...(isWrong && {
-    backgroundColor: theme.palette.accent1.light + '40',
-    border: `1px solid ${theme.palette.accent1.main}`,
-  }),
-  '&:hover': {
-    backgroundColor: theme.palette.primary.light + '20',
-  },
-}));
+const Option = styled(FormControlLabel)(
+  ({ theme, isSelected, isCorrect, isWrong }) => ({
+    width: "100%",
+    margin: 0,
+    padding: theme.spacing(1.5),
+    borderRadius: theme.shape.borderRadius,
+    transition: "all 0.2s ease",
+    marginBottom: theme.spacing(1),
+    ...(isSelected && {
+      backgroundColor: theme.palette.primary.light + "30",
+    }),
+    ...(isCorrect && {
+      backgroundColor: theme.palette.tertiary.light + "40",
+      border: `1px solid ${theme.palette.tertiary.main}`,
+    }),
+    ...(isWrong && {
+      backgroundColor: theme.palette.accent1.light + "40",
+      border: `1px solid ${theme.palette.accent1.main}`,
+    }),
+    "&:hover": {
+      backgroundColor: theme.palette.primary.light + "20",
+    },
+  })
+);
 
 const Quiz = ({ questions, onComplete }) => {
   const [activeStep, setActiveStep] = useState(0);
@@ -72,7 +83,7 @@ const Quiz = ({ questions, onComplete }) => {
   const handleAnswerSelect = (event) => {
     setSelectedAnswers({
       ...selectedAnswers,
-      [activeStep]: event.target.value
+      [activeStep]: event.target.value,
     });
   };
 
@@ -88,7 +99,7 @@ const Quiz = ({ questions, onComplete }) => {
         onComplete(calculateScore());
       }
     } else {
-      setActiveStep(prevStep => prevStep + 1);
+      setActiveStep((prevStep) => prevStep + 1);
     }
   };
 
@@ -105,7 +116,8 @@ const Quiz = ({ questions, onComplete }) => {
   };
 
   const isAnswerSelected = selectedAnswers[activeStep] !== undefined;
-  const isAnswerCorrect = selectedAnswers[activeStep] === currentQuestion?.correctAnswer;
+  const isAnswerCorrect =
+    selectedAnswers[activeStep] === currentQuestion?.correctAnswer;
 
   if (quizCompleted) {
     const score = calculateScore();
@@ -117,14 +129,21 @@ const Quiz = ({ questions, onComplete }) => {
           Quiz Results
         </Typography>
 
-        <Box sx={{ textAlign: 'center', my: 4 }}>
-          <Typography variant="h3" color={passed ? 'tertiary.main' : 'accent1.main'}>
+        <Box sx={{ textAlign: "center", my: 4 }}>
+          <Typography
+            variant="h3"
+            color={passed ? "tertiary.main" : "accent1.main"}
+          >
             {Math.round(score)}%
           </Typography>
           <Typography variant="subtitle1" color="text.secondary">
-            You answered {Object.values(selectedAnswers).filter((answer, index) =>
-              answer === questions[index].correctAnswer
-            ).length} out of {questions.length} questions correctly.
+            You answered{" "}
+            {
+              Object.values(selectedAnswers).filter(
+                (answer, index) => answer === questions[index].correctAnswer
+              ).length
+            }{" "}
+            out of {questions.length} questions correctly.
           </Typography>
         </Box>
 
@@ -145,11 +164,19 @@ const Quiz = ({ questions, onComplete }) => {
             </Typography>
             <Typography
               variant="body2"
-              color={selectedAnswers[index] === question.correctAnswer ? 'tertiary.main' : 'accent1.main'}
+              color={
+                selectedAnswers[index] === question.correctAnswer
+                  ? "tertiary.main"
+                  : "accent1.main"
+              }
             >
               Your answer: {question.options[selectedAnswers[index]]}
               {selectedAnswers[index] !== question.correctAnswer && (
-                <Typography component="span" color="tertiary.main" sx={{ display: 'block' }}>
+                <Typography
+                  component="span"
+                  color="tertiary.main"
+                  sx={{ display: "block" }}
+                >
                   Correct answer: {question.options[question.correctAnswer]}
                 </Typography>
               )}
@@ -189,7 +216,7 @@ const Quiz = ({ questions, onComplete }) => {
 
             <FormControl component="fieldset" fullWidth sx={{ mt: 2 }}>
               <RadioGroup
-                value={selectedAnswers[activeStep] || ''}
+                value={selectedAnswers[activeStep] || ""}
                 onChange={handleAnswerSelect}
               >
                 {Object.entries(currentQuestion.options).map(([key, value]) => (
@@ -199,8 +226,14 @@ const Quiz = ({ questions, onComplete }) => {
                     control={<Radio />}
                     label={value}
                     isSelected={selectedAnswers[activeStep] === key}
-                    isCorrect={showFeedback && key === currentQuestion.correctAnswer}
-                    isWrong={showFeedback && selectedAnswers[activeStep] === key && key !== currentQuestion.correctAnswer}
+                    isCorrect={
+                      showFeedback && key === currentQuestion.correctAnswer
+                    }
+                    isWrong={
+                      showFeedback &&
+                      selectedAnswers[activeStep] === key &&
+                      key !== currentQuestion.correctAnswer
+                    }
                   />
                 ))}
               </RadioGroup>
@@ -220,7 +253,8 @@ const Quiz = ({ questions, onComplete }) => {
                 <>
                   <ErrorIcon sx={{ mr: 1 }} />
                   <Typography variant="body1">
-                    Not quite. The correct answer is "{currentQuestion.options[currentQuestion.correctAnswer]}".
+                    Not quite. The correct answer is "
+                    {currentQuestion.options[currentQuestion.correctAnswer]}".
                     {currentQuestion.explanation}
                   </Typography>
                 </>
@@ -230,12 +264,12 @@ const Quiz = ({ questions, onComplete }) => {
         </motion.div>
       </AnimatePresence>
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
         <Button
           disabled={activeStep === 0}
           onClick={() => {
             setShowFeedback(false);
-            setActiveStep(prevStep => prevStep - 1);
+            setActiveStep((prevStep) => prevStep - 1);
           }}
           variant="outlined"
         >
@@ -252,12 +286,10 @@ const Quiz = ({ questions, onComplete }) => {
             Check Answer
           </Button>
         ) : (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleNext}
-          >
-            {activeStep === questions.length - 1 ? 'Finish Quiz' : 'Next Question'}
+          <Button variant="contained" color="primary" onClick={handleNext}>
+            {activeStep === questions.length - 1
+              ? "Finish Quiz"
+              : "Next Question"}
           </Button>
         )}
       </Box>

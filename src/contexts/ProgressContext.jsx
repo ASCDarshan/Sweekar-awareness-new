@@ -96,7 +96,15 @@ export const ProgressProvider = ({ children }) => {
   };
 
   return (
-    <ProgressContext.Provider value={{ getOverallProgress, markPageAsVisited, markAsCompleted, getSectionCompletion, isCompleted }}>
+    <ProgressContext.Provider
+      value={{
+        getOverallProgress,
+        markPageAsVisited,
+        markAsCompleted,
+        getSectionCompletion,
+        isCompleted,
+      }}
+    >
       {children}
     </ProgressContext.Provider>
   );

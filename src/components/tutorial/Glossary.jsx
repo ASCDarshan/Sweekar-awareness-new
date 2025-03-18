@@ -1,13 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
-  Box, Typography, TextField, InputAdornment, Card, CardContent,
-  Tabs, Tab, Chip, Divider, Accordion, AccordionSummary,
-  AccordionDetails, useTheme, alpha
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
-import SearchIcon from '@mui/icons-material/Search';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { motion, AnimatePresence } from 'framer-motion';
+  Box,
+  Typography,
+  TextField,
+  InputAdornment,
+  Card,
+  CardContent,
+  Tabs,
+  Tab,
+  Chip,
+  Divider,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  useTheme,
+  alpha,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import SearchIcon from "@mui/icons-material/Search";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { motion, AnimatePresence } from "framer-motion";
 
 const GlossaryContainer = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(4),
@@ -15,9 +27,9 @@ const GlossaryContainer = styled(Box)(({ theme }) => ({
 
 const SearchField = styled(TextField)(({ theme }) => ({
   marginBottom: theme.spacing(3),
-  '& .MuiOutlinedInput-root': {
+  "& .MuiOutlinedInput-root": {
     borderRadius: theme.shape.borderRadius * 2,
-    '&.Mui-focused': {
+    "&.Mui-focused": {
       boxShadow: `0 0 0 2px ${alpha(theme.palette.primary.main, 0.25)}`,
     },
   },
@@ -26,10 +38,16 @@ const SearchField = styled(TextField)(({ theme }) => ({
 const CategoryChip = styled(Chip)(({ theme, active }) => ({
   margin: theme.spacing(0.5),
   fontWeight: active ? 600 : 400,
-  backgroundColor: active ? theme.palette.primary.main : theme.palette.background.card,
-  color: active ? theme.palette.primary.contrastText : theme.palette.text.primary,
-  '&:hover': {
-    backgroundColor: active ? theme.palette.primary.dark : theme.palette.background.default,
+  backgroundColor: active
+    ? theme.palette.primary.main
+    : theme.palette.background.card,
+  color: active
+    ? theme.palette.primary.contrastText
+    : theme.palette.text.primary,
+  "&:hover": {
+    backgroundColor: active
+      ? theme.palette.primary.dark
+      : theme.palette.background.default,
   },
 }));
 
@@ -40,60 +58,61 @@ const AlphabetTab = styled(Tab)(({ theme }) => ({
 
 const TermCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(2),
-  overflow: 'visible',
-  transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
-  '&:hover': {
-    transform: 'translateY(-2px)',
+  overflow: "visible",
+  transition: "transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out",
+  "&:hover": {
+    transform: "translateY(-2px)",
     boxShadow: theme.shadows[3],
   },
 }));
 
 const TermAccordion = styled(Accordion)(({ theme }) => ({
-  boxShadow: 'none',
-  '&:before': {
-    display: 'none',
+  boxShadow: "none",
+  "&:before": {
+    display: "none",
   },
-  '&.Mui-expanded': {
+  "&.Mui-expanded": {
     margin: 0,
   },
 }));
 
 const CategoryList = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexWrap: 'wrap',
+  display: "flex",
+  flexWrap: "wrap",
   marginBottom: theme.spacing(3),
   marginTop: theme.spacing(1),
 }));
 
 const Glossary = ({ terms }) => {
   const theme = useTheme();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedLetter, setSelectedLetter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedLetter, setSelectedLetter] = useState("all");
   const [filteredTerms, setFilteredTerms] = useState([]);
 
-  const categories = ['all', ...new Set(terms.map(term => term.category))];
+  const categories = ["all", ...new Set(terms.map((term) => term.category))];
 
-  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
   useEffect(() => {
     let results = [...terms];
 
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      results = results.filter(term =>
-        term.term.toLowerCase().includes(query) ||
-        term.definition.toLowerCase().includes(query)
+      results = results.filter(
+        (term) =>
+          term.term.toLowerCase().includes(query) ||
+          term.definition.toLowerCase().includes(query)
       );
     }
 
-    if (selectedCategory !== 'all') {
-      results = results.filter(term => term.category === selectedCategory);
+    if (selectedCategory !== "all") {
+      results = results.filter((term) => term.category === selectedCategory);
     }
 
-    if (selectedLetter !== 'all') {
-      results = results.filter(term =>
-        term.term.charAt(0).toUpperCase() === selectedLetter
+    if (selectedLetter !== "all") {
+      results = results.filter(
+        (term) => term.term.charAt(0).toUpperCase() === selectedLetter
       );
     }
 
@@ -137,10 +156,10 @@ const Glossary = ({ terms }) => {
       />
 
       <CategoryList>
-        {categories.map(category => (
+        {categories.map((category) => (
           <CategoryChip
             key={category}
-            label={category === 'all' ? 'All Categories' : category}
+            label={category === "all" ? "All Categories" : category}
             active={selectedCategory === category ? 1 : 0}
             onClick={() => handleCategoryChange(category)}
             clickable
@@ -156,7 +175,7 @@ const Glossary = ({ terms }) => {
         sx={{ mb: 3 }}
       >
         <AlphabetTab label="All" value="all" />
-        {alphabet.map(letter => (
+        {alphabet.map((letter) => (
           <AlphabetTab
             key={letter}
             label={letter}
@@ -167,7 +186,12 @@ const Glossary = ({ terms }) => {
       </Tabs>
 
       {filteredTerms.length === 0 ? (
-        <Typography variant="body1" color="text.secondary" align="center" sx={{ py: 4 }}>
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          align="center"
+          sx={{ py: 4 }}
+        >
           No terms found matching your filters.
         </Typography>
       ) : (
@@ -188,7 +212,7 @@ const Glossary = ({ terms }) => {
                   color: theme.palette.primary.main,
                   borderBottom: `2px solid ${theme.palette.primary.light}`,
                   pb: 0.5,
-                  display: 'inline-block'
+                  display: "inline-block",
                 }}
               >
                 {letter}
@@ -202,12 +226,18 @@ const Glossary = ({ terms }) => {
                       aria-controls={`panel-${index}-content`}
                       id={`panel-${index}-header`}
                     >
-                      <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          width: "100%",
+                        }}
+                      >
                         <Typography variant="h6">{term.term}</Typography>
                         <Chip
                           label={term.category}
                           size="small"
-                          sx={{ ml: 'auto', mr: 2 }}
+                          sx={{ ml: "auto", mr: 2 }}
                         />
                       </Box>
                     </AccordionSummary>
